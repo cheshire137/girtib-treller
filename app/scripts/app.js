@@ -1,44 +1,28 @@
-
 var React = window.React = require('react'),
-    Timer = require("./ui/Timer"),
-    mountNode = document.getElementById("app");
+    mountNode = document.getElementById('app'),
+    Config = require('./config.json');
 
-var TodoList = React.createClass({
-  render: function() {
-    var createItem = function(itemText) {
-      return <li>{itemText}</li>;
-    };
-    return <ul>{this.props.items.map(createItem)}</ul>;
-  }
-});
-var TodoApp = React.createClass({
+var GirtibTrellerApp = React.createClass({
+  getGuid: function() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+      return v.toString(16);
+    });
+  },
   getInitialState: function() {
-    return {items: [], text: ''};
-  },
-  onChange: function(e) {
-    this.setState({text: e.target.value});
-  },
-  handleSubmit: function(e) {
-    e.preventDefault();
-    var nextItems = this.state.items.concat([this.state.text]);
-    var nextText = '';
-    this.setState({items: nextItems, text: nextText});
+    var clientId = Config.github.clientId;
+    var scopes = 'repo:status';
+    var state = this.getGuid();
+    var url = 'https://github.com/login/oauth/authorize?client_id=' + clientId + '&redirect_uri=&scope=' + scopes + '&state=' + state;
+    return {githubAuthUrl: url};
   },
   render: function() {
     return (
       <div>
-        <h3>TODO</h3>
-        <TodoList items={this.state.items} />
-        <form onSubmit={this.handleSubmit}>
-          <input onChange={this.onChange} value={this.state.text} />
-          <button>{'Add #' + (this.state.items.length + 1)}</button>
-        </form>
-        <Timer />
+        <a href={this.state.githubAuthUrl}>Sign in with Github</a>
       </div>
     );
   }
 });
 
-
-React.render(<TodoApp />, mountNode);
-
+React.render(<GirtibTrellerApp />, mountNode);
