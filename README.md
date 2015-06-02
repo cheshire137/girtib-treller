@@ -8,6 +8,7 @@
 
 Edit config.json to fill in the client ID you got from your new Github app.
 
+    bundle install
     npm install
     gulp watch
 
