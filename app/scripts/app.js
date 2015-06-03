@@ -55,12 +55,18 @@ var Github = (function() {
         'Authorization': 'token ' + LocalStorage.get('token')
       };
     },
-    getOrgs: function() {
+    getJSON: function(path) {
       return $.ajax({
         dataType: 'json',
-        url: this.apiUrl + '/user/orgs',
+        url: this.apiUrl + path,
         headers: this.getHeaders()
       })
+    },
+    getUser: function() {
+      return this.getJSON('/user');
+    },
+    getOrgs: function() {
+      return this.getJSON('/user/orgs');
     },
     getOrgNames: function() {
       return $.Deferred(function(defer) {
@@ -80,18 +86,10 @@ var Github = (function() {
       }.bind(this)).promise();
     },
     getUserRepos: function() {
-      return $.ajax({
-        dataType: 'json',
-        url: this.apiUrl + '/user/repos',
-        headers: this.getHeaders()
-      });
+      return this.getJSON('/user/repos');
     },
     getOrgRepos: function(orgName) {
-      return $.ajax({
-        dataType: 'json',
-        url: this.apiUrl + '/orgs/' + orgName + '/repos',
-        headers: this.getHeaders()
-      });
+      return this.getJSON('/orgs/' + orgName + '/repos');
     },
     getAllOrgRepos: function(orgNames) {
       return $.Deferred(function(defer) {
@@ -106,7 +104,6 @@ var Github = (function() {
             }
           }
           if (finished) {
-            console.log('finished fetching repos', allRepos);
             defer.resolve(allRepos);
           }
         };
@@ -127,6 +124,7 @@ var Github = (function() {
       return $.Deferred(function(defer) {
         this.getUserRepos().then(function(userRepos) {
           this.getOrgNames().then(function(orgNames) {
+            console.log(orgNames.length, 'organizations:', orgNames);
             this.getAllOrgRepos(orgNames).then(function(orgRepos) {
               defer.resolve(userRepos.concat(orgRepos));
             }, defer.reject);
@@ -142,7 +140,7 @@ var Index = React.createClass({
   componentWillMount: function() {
     var token = LocalStorage.get('token');
     if (token) {
-      this.transitionTo('commits');
+      this.transitionTo('github');
     }
   },
   getInitialState: function() {
@@ -180,7 +178,7 @@ var Auth = React.createClass({
     var router = this.context.router;
     var token = this.context.router.getCurrentParams().token;
     LocalStorage.set('token', token);
-    this.transitionTo('commits');
+    this.transitionTo('github');
     return <p></p>;
   }
 });
@@ -200,7 +198,6 @@ var CommitsList = React.createClass({
   componentDidMount: function() {
     Github.getRepos().then(function(repos) {
       console.log(repos.length, 'repositories');
-      console.log(repos);
       this.setState({repos: repos});
     }.bind(this), function() {
       console.error('failed to fetch all repositories');
@@ -218,10 +215,37 @@ var CommitsList = React.createClass({
   }
 });
 
-var Commits = React.createClass({
-  render: function () {
+var UserDetails = React.createClass({
+  getInitialState: function() {
+    return {user: {}};
+  },
+  componentDidMount: function() {
+    Github.getUser().then(function(user) {
+      console.log(user);
+      this.setState({user: user});
+    }.bind(this), function() {
+      console.error('failed to fetch Github user details');
+    });
+  },
+  render: function() {
     return (
-      <div class="commits"><CommitsList /></div>
+      <div className="github-user clearfix">
+        <a href={this.state.user.html_url} className="name-and-avatar">
+          <img src={this.state.user.avatar_url} alt={this.state.user.login} className="avatar"/>
+          <span className="name">{this.state.user.name}</span>
+        </a>
+      </div>
+    );
+  }
+});
+
+var GithubData = React.createClass({
+  render: function() {
+    return (
+      <div>
+        <div className="user-details"><UserDetails /></div>
+        <div className="commits"><CommitsList /></div>
+      </div>
     );
   }
 });
@@ -237,7 +261,7 @@ var routes = (
     <DefaultRoute handler={Index} />
     <Route name="authFailure" path="failed-auth" handler={AuthFailure}/>
     <Route name="auth" path="auth/:token" handler={Auth}/>
-    <Route name="commits" path="commits" handler={Commits}/>
+    <Route name="github" path="github" handler={GithubData}/>
     <NotFoundRoute handler={NotFound}/>
   </Route>
 );
