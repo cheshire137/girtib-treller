@@ -10,7 +10,7 @@ set :session_secret, ENV['SESSION_KEY']
 get '/auth/github' do
   content_type :json
   session[:state] = SecureRandom.hex
-  scopes = 'repo:status'
+  scopes = 'repo'
   redirect_url = "#{request.scheme}://#{request.host}"
   redirect_url += ":#{request.port}" unless request.port == 80
   redirect_url += '/auth/github/callback'
