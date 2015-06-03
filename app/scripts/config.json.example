@@ -1,5 +1,4 @@
 {
-  "github": {
-    "clientId": ""
-  }
+  "localStorageKey": "girtib-treller",
+  "apiUrl": "http://localhost:9292"
 }

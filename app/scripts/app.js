@@ -20,32 +20,56 @@ var GirtibTrellerApp = React.createClass({
   }
 });
 
+var LocalStorage = (function() {
+  return {
+    getJSON: function() {
+      if (!window.localStorage) {
+        console.error('browser does not support local storage');
+        return {};
+      }
+      var appData = window.localStorage.getItem(Config.localStorageKey) || "{}";
+      return JSON.parse(appData);
+    },
+    get: function(key) {
+      var appData = this.getJSON();
+      return appData[key];
+    },
+    set: function(key, value) {
+      var appData = this.getJSON();
+      appData[key] = value;
+      window.localStorage.setItem(Config.localStorageKey, JSON.stringify(appData));
+    },
+    delete: function(key) {
+      var appData = this.getJSON();
+      delete appData[key];
+      window.localStorage.setItem(Config.localStorageKey, JSON.stringify(appData));
+    }
+  };
+})();
+
 var Index = React.createClass({
-  getGuid: function() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-      return v.toString(16);
-    });
-  },
   getInitialState: function() {
-    var clientId = Config.github.clientId;
-    var scopes = 'repo:status';
-    var state = this.getGuid();
-    // TODO: store state in localstorage
-    var currentLocation = window.location;
-    var redirectUri = currentLocation.protocol + '//' + currentLocation.host +
-                      '/#/auth';
-    var url = 'https://github.com/login/oauth/authorize?client_id=' + clientId +
-              '&redirect_uri=' + redirectUri + '&scope=' + scopes + '&state=' +
-              state;
-    return {githubAuthUrl: url};
+    return {
+      authUrl: Config.apiUrl + '/auth/github'
+    };
   },
   render: function() {
     return (
       <div>
         <h1>Girtib Treller</h1>
-        <p><a href={this.state.githubAuthUrl}>Sign in with Github</a></p>
+        <p><a href={this.state.authUrl}>Sign in with Github</a></p>
       </div>
+    );
+  }
+});
+
+var AuthFailure = React.createClass({
+  render: function() {
+    return (
+      <p>
+        Something went wrong with your Github authentication. Please
+        <a href="/#/">try again</a>.
+      </p>
     );
   }
 });
@@ -56,10 +80,8 @@ var Auth = React.createClass({
   },
   render: function() {
     var router = this.context.router;
-    var state = this.context.router.getCurrentParams().state;
-    var code = window.location.search.split('?code=')[1];
-    console.log(code, state);
-    // TODO: make sure state matches, POST to get an access token, store in localstorage
+    var token = this.context.router.getCurrentParams().token;
+    LocalStorage.set('token', token);
     return (
       <div>
         aw yea
@@ -77,7 +99,8 @@ var NotFound = React.createClass({
 var routes = (
   <Route handler={GirtibTrellerApp} path="/">
     <DefaultRoute handler={Index} />
-    <Route name="auth" path="auth&scope=:scope&state=:state" handler={Auth}/>
+    <Route name="authFailure" path="failed-auth" handler={AuthFailure}/>
+    <Route name="auth" path="auth/:token" handler={Auth}/>
     <NotFoundRoute handler={NotFound}/>
   </Route>
 );
