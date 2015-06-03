@@ -47,6 +47,21 @@ var LocalStorage = (function() {
   };
 })();
 
+var Github = (function() {
+  return {
+    getRepos: function() {
+      var url = 'https://api.github.com/user/repos'
+      return $.ajax({
+        dataType: 'json',
+        url: url,
+        headers: {
+          'Authorization': 'token ' + LocalStorage.get('token')
+        }
+      });
+    }
+  };
+})();
+
 var Index = React.createClass({
   mixins : [Router.Navigation],
   componentWillMount: function() {
@@ -95,10 +110,38 @@ var Auth = React.createClass({
   }
 });
 
+var RepoListItem = React.createClass({
+  render: function() {
+    return (
+      <li>{this.props.repo.name}</li>
+    );
+  }
+});
+
+var CommitsList = React.createClass({
+  getInitialState: function() {
+    return {repos: []};
+  },
+  componentDidMount: function() {
+    Github.getRepos().success(function(repos) {
+      this.setState({repos: repos});
+    }.bind(this));
+  },
+  render: function() {
+    var listItems = [];
+    this.state.repos.forEach(function(repo) {
+      listItems.push(<RepoListItem repo={repo} />);
+    });
+    return (
+      <ul>{listItems}</ul>
+    );
+  }
+});
+
 var Commits = React.createClass({
   render: function () {
     return (
-      <p>ur commits here</p>
+      <div class="commits"><CommitsList /></div>
     );
   }
 });
