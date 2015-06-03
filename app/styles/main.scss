@@ -21,6 +21,12 @@ body {
 }
 
 .repos-list {
+  [type="checkbox"] + label {
+    line-height: 20px;
+    height: 20px;
+    margin-top: 2px;
+  }
+
   .org-list-item {
     & + .org-list-item {
       margin-top: 10px;
@@ -29,8 +35,13 @@ body {
 }
 
 .repo-list-item {
+  white-space: nowrap;
+
   .repo-link {
     display: inline-block;
+    vertical-align: middle;
+    line-height: 25px;
+    margin-left: 0.3em;
   }
 
   .public-indicator, .private-indicator {
