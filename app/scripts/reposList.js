@@ -1,22 +1,35 @@
-var RepoListItem = require('./repoListItem').RepoListItem,
-    Github = require('./github').Github;
+var Github = require('./github').Github,
+    RepoGroup = require('./repoGroup').RepoGroup;
 exports.ReposList = React.createClass({
   getInitialState: function() {
-    return {repos: []};
+    return {repos: {}};
   },
   componentDidMount: function() {
     Github.getRepos().then(function(repos) {
       console.log(repos.length, 'repositories');
-      this.setState({repos: repos});
+      var orgNames = $.unique(repos.map(function(repo) {
+        return repo.owner.login;
+      }));
+      orgNames.sort(function(a, b) {
+        return a.toLowerCase().localeCompare(b.toLowerCase());
+      });
+      var reposByOrg = {};
+      for (var i=0; i<orgNames.length; i++) {
+        reposByOrg[orgNames[i]] = [];
+      }
+      for (var i=0; i<repos.length; i++) {
+        var repo = repos[i];
+        reposByOrg[repo.owner.login].push(repo);
+      }
+      this.setState({repos: reposByOrg});
     }.bind(this), function() {
       console.error('failed to fetch all repositories');
     });
   },
   render: function() {
     var listItems = [];
-    for (var i=0; i<this.state.repos.length; i++) {
-      var repo = this.state.repos[i];
-      listItems.push(<RepoListItem repo={repo} />);
+    for (var orgName in this.state.repos) {
+      listItems.push(<RepoGroup orgName={orgName} repos={this.state.repos[orgName]} />);
     }
     return (
       <ul className="repos-list">{listItems}</ul>

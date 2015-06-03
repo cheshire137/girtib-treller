@@ -8,7 +8,7 @@ exports.RepoListItem = React.createClass({
     return (
       <li className="repo-list-item">
         <a className="repo-link" href={this.props.repo.html_url} target="_blank">
-          {this.props.repo.full_name}
+          {this.props.repo.name}
         </a>
         {icon}
       </li>
