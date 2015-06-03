@@ -44,7 +44,6 @@ gulp.task('stylus', function() {
     .pipe($.size());
 });
 
-
 var bundler = watchify(browserify({
   entries: [sourceFile],
   debug: true,
@@ -78,9 +77,6 @@ gulp.task('buildScripts', function() {
     .pipe(gulp.dest('dist/scripts'));
 });
 
-
-
-
 gulp.task('jade', function() {
   return gulp.src('app/template/*.jade')
     .pipe($.jade({
@@ -88,8 +84,6 @@ gulp.task('jade', function() {
     }))
     .pipe(gulp.dest('dist'));
 })
-
-
 
 // HTML
 gulp.task('html', function() {
@@ -116,7 +110,7 @@ gulp.task('fonts', function() {
   return gulp.src(require('main-bower-files')({
       filter: '**/*.{eot,svg,ttf,woff,woff2}'
     }).concat('app/fonts/**/*'))
-    .pipe(gulp.dest('dist/fonts'));
+      .pipe(gulp.dest('dist/fonts'));
 });
 
 // Clean

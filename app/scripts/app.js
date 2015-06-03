@@ -186,13 +186,9 @@ var Auth = React.createClass({
 var RepoListItem = React.createClass({
   render: function() {
     var icon = this.props.repo.private ? (
-      <span className="private-indicator">
-        (private)
-      </span>
+      <span className="private-indicator mdi-action-lock"></span>
     ) : (
-      <span className="public-indicator">
-        (public)
-      </span>
+      <span className="public-indicator"></span>
     );
     return (
       <li className="repo-list-item">
