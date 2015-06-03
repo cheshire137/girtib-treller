@@ -48,6 +48,13 @@ var LocalStorage = (function() {
 })();
 
 var Index = React.createClass({
+  mixins : [Router.Navigation],
+  componentWillMount: function() {
+    var token = LocalStorage.get('token');
+    if (token) {
+      this.transitionTo('commits');
+    }
+  },
   getInitialState: function() {
     return {
       authUrl: Config.apiUrl + '/auth/github'
@@ -75,6 +82,7 @@ var AuthFailure = React.createClass({
 });
 
 var Auth = React.createClass({
+  mixins : [Router.Navigation],
   contextTypes: {
     router: React.PropTypes.func
   },
@@ -82,10 +90,15 @@ var Auth = React.createClass({
     var router = this.context.router;
     var token = this.context.router.getCurrentParams().token;
     LocalStorage.set('token', token);
+    this.transitionTo('commits');
+    return <p></p>;
+  }
+});
+
+var Commits = React.createClass({
+  render: function () {
     return (
-      <div>
-        aw yea
-      </div>
+      <p>ur commits here</p>
     );
   }
 });
@@ -101,6 +114,7 @@ var routes = (
     <DefaultRoute handler={Index} />
     <Route name="authFailure" path="failed-auth" handler={AuthFailure}/>
     <Route name="auth" path="auth/:token" handler={Auth}/>
+    <Route name="commits" path="commits" handler={Commits}/>
     <NotFoundRoute handler={NotFound}/>
   </Route>
 );
