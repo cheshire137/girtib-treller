@@ -13,6 +13,18 @@ body {
 
 $avatar-height: 50px;
 
+.repo-list-item {
+  .repo-link {
+    display: inline-block;
+  }
+
+  .public-indicator, .private-indicator {
+    display: inline-block;
+    margin-left: 10px;
+    color: #999;
+  }
+}
+
 .github-user {
   .logout-link {
     display: inline-block;

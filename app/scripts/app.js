@@ -185,13 +185,27 @@ var Auth = React.createClass({
 
 var RepoListItem = React.createClass({
   render: function() {
+    var icon = this.props.repo.private ? (
+      <span className="private-indicator">
+        (private)
+      </span>
+    ) : (
+      <span className="public-indicator">
+        (public)
+      </span>
+    );
     return (
-      <li>{this.props.repo.owner.login}/{this.props.repo.name}</li>
+      <li className="repo-list-item">
+        <a className="repo-link" href={this.props.repo.html_url} target="_blank">
+          {this.props.repo.full_name}
+        </a>
+        {icon}
+      </li>
     );
   }
 });
 
-var CommitsList = React.createClass({
+var ReposList = React.createClass({
   getInitialState: function() {
     return {repos: []};
   },
@@ -210,7 +224,7 @@ var CommitsList = React.createClass({
       listItems.push(<RepoListItem repo={repo} />);
     }
     return (
-      <ul>{listItems}</ul>
+      <ul className="repos-list">{listItems}</ul>
     );
   }
 });
@@ -230,7 +244,7 @@ var UserDetails = React.createClass({
   render: function() {
     return (
       <div className="github-user clearfix">
-        <a href={this.state.user.html_url} className="name-and-avatar">
+        <a href={this.state.user.html_url} className="name-and-avatar" target="_blank">
           <img src={this.state.user.avatar_url} alt={this.state.user.login} className="avatar"/>
           <span className="name">{this.state.user.name}</span>
         </a>
@@ -247,7 +261,10 @@ var GithubData = React.createClass({
       <div>
         <h1>Girtib Treller</h1>
         <div className="user-details"><UserDetails /></div>
-        <div className="commits"><CommitsList /></div>
+        <div className="repos">
+          <h2>Repositories</h2>
+          <ReposList />
+        </div>
       </div>
     );
   }
