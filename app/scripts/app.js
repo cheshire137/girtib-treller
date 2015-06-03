@@ -49,15 +49,90 @@ var LocalStorage = (function() {
 
 var Github = (function() {
   return {
-    getRepos: function() {
-      var url = 'https://api.github.com/user/repos'
+    apiUrl: 'https://api.github.com',
+    getHeaders: function() {
+      return {
+        'Authorization': 'token ' + LocalStorage.get('token')
+      };
+    },
+    getOrgs: function() {
       return $.ajax({
         dataType: 'json',
-        url: url,
-        headers: {
-          'Authorization': 'token ' + LocalStorage.get('token')
+        url: this.apiUrl + '/user/orgs',
+        headers: this.getHeaders()
+      })
+    },
+    getOrgNames: function() {
+      return $.Deferred(function(defer) {
+        var orgNames = LocalStorage.get('orgNames');
+        if (orgNames) {
+          defer.resolve(orgNames);
+        } else {
+          orgNames = [];
+          this.getOrgs().success(function(orgs) {
+            for (var i=0; i<orgs.length; i++) {
+              orgNames.push(orgs[i].login);
+            }
+            LocalStorage.set('orgNames', orgNames);
+            defer.resolve(orgNames);
+          }).error(defer.reject);
         }
+      }.bind(this)).promise();
+    },
+    getUserRepos: function() {
+      return $.ajax({
+        dataType: 'json',
+        url: this.apiUrl + '/user/repos',
+        headers: this.getHeaders()
       });
+    },
+    getOrgRepos: function(orgName) {
+      return $.ajax({
+        dataType: 'json',
+        url: this.apiUrl + '/orgs/' + orgName + '/repos',
+        headers: this.getHeaders()
+      });
+    },
+    getAllOrgRepos: function(orgNames) {
+      return $.Deferred(function(defer) {
+        var statuses = {};
+        var allRepos = [];
+        var resolveIfNecessary = function() {
+          var finished = true;
+          for (var orgName in statuses) {
+            var status = statuses[orgName];
+            if (status === 'pending') {
+              finished = false;
+            }
+          }
+          if (finished) {
+            console.log('finished fetching repos', allRepos);
+            defer.resolve(allRepos);
+          }
+        };
+        orgNames.forEach(function(name) {
+          statuses[name] = 'pending';
+          this.getOrgRepos(name).success(function(orgRepos) {
+            allRepos = allRepos.concat(orgRepos);
+            statuses[name] = 'success'
+            resolveIfNecessary();
+          }).error(function() {
+            statuses[name] = 'failure';
+            resolveIfNecessary();
+          });
+        }.bind(this));
+      }.bind(this)).promise();
+    },
+    getRepos: function() {
+      return $.Deferred(function(defer) {
+        this.getUserRepos().then(function(userRepos) {
+          this.getOrgNames().then(function(orgNames) {
+            this.getAllOrgRepos(orgNames).then(function(orgRepos) {
+              defer.resolve(userRepos.concat(orgRepos));
+            }, defer.reject);
+          }.bind(this), defer.reject);
+        }.bind(this), defer.reject);
+      }.bind(this)).promise();
     }
   };
 })();
@@ -113,7 +188,7 @@ var Auth = React.createClass({
 var RepoListItem = React.createClass({
   render: function() {
     return (
-      <li>{this.props.repo.name}</li>
+      <li>{this.props.repo.owner.login}/{this.props.repo.name}</li>
     );
   }
 });
@@ -123,15 +198,20 @@ var CommitsList = React.createClass({
     return {repos: []};
   },
   componentDidMount: function() {
-    Github.getRepos().success(function(repos) {
+    Github.getRepos().then(function(repos) {
+      console.log(repos.length, 'repositories');
+      console.log(repos);
       this.setState({repos: repos});
-    }.bind(this));
+    }.bind(this), function() {
+      console.error('failed to fetch all repositories');
+    });
   },
   render: function() {
     var listItems = [];
-    this.state.repos.forEach(function(repo) {
+    for (var i=0; i<this.state.repos.length; i++) {
+      var repo = this.state.repos[i];
       listItems.push(<RepoListItem repo={repo} />);
-    });
+    }
     return (
       <ul>{listItems}</ul>
     );
