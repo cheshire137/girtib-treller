@@ -6,9 +6,13 @@ exports.RepoGroup = React.createClass({
       var repo = this.props.repos[i];
       listItems.push(<RepoListItem repo={repo} />)
     }
+    var checkboxId = 'org-' + this.props.index;
     return (
       <li className="org-list-item">
-        <span className="org-name">{this.props.orgName}</span>
+        <input type="checkbox" className="filled-in" id={checkboxId} />
+        <label htmlFor={checkboxId} className="org-name">
+          {this.props.orgName}
+        </label>
         <ul className="org-repos-list">{listItems}</ul>
       </li>
     );

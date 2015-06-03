@@ -28,8 +28,10 @@ exports.ReposList = React.createClass({
   },
   render: function() {
     var listItems = [];
+    var index = 0;
     for (var orgName in this.state.repos) {
-      listItems.push(<RepoGroup orgName={orgName} repos={this.state.repos[orgName]} />);
+      listItems.push(<RepoGroup index={index} orgName={orgName} repos={this.state.repos[orgName]} />);
+      index++;
     }
     return (
       <ul className="repos-list">{listItems}</ul>

@@ -17,7 +17,7 @@ body {
 }
 
 .org-repos-list {
-  margin-left: 1em;
+  margin-left: 35px;
 }
 
 .repo-list-item {
@@ -30,6 +30,15 @@ body {
     margin-left: 0.3em;
     color: #999;
   }
+}
+
+.repos-header {
+  margin-bottom: 0;
+  font-size: 1rem;
+  line-height: 1.3;
+  text-transform: uppercase;
+  color: #777;
+  letter-spacing: 0.1em;
 }
 
 .github-user {

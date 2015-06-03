@@ -13,9 +13,11 @@ exports.GithubData = React.createClass({
           </div>
         </nav>
         <div className="container">
-          <div className="repos">
-            <h2>Repositories</h2>
-            <ReposList />
+          <div className="row">
+            <div className="col s4">
+              <h2 className="repos-header">Repositories</h2>
+              <ReposList />
+            </div>
           </div>
         </div>
       </div>
