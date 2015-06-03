@@ -11,20 +11,28 @@ body {
   padding: 0.2em 0;
 }
 
+$avatar-height: 50px;
+
 .github-user {
+  .logout-link {
+    display: inline-block;
+    height: $avatar-height;
+    line-height: $avatar-height;
+  }
+
   .name-and-avatar {
-    display: block;
-    height: 50px;
+    display: inline-block;
+    height: $avatar-height;
 
     .avatar {
-      max-height: 50px;
+      max-height: $avatar-height;
       border-radius: 100%;
       display: inline-block;
       float: left;
     }
 
     .name {
-      line-height: 50px;
+      line-height: $avatar-height;
       vertical-align: middle;
       margin-left: 10px;
       display: inline-block;

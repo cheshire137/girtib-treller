@@ -136,7 +136,7 @@ var Github = (function() {
 })();
 
 var Index = React.createClass({
-  mixins : [Router.Navigation],
+  mixins: [Router.Navigation],
   componentWillMount: function() {
     var token = LocalStorage.get('token');
     if (token) {
@@ -170,7 +170,7 @@ var AuthFailure = React.createClass({
 });
 
 var Auth = React.createClass({
-  mixins : [Router.Navigation],
+  mixins: [Router.Navigation],
   contextTypes: {
     router: React.PropTypes.func
   },
@@ -234,6 +234,8 @@ var UserDetails = React.createClass({
           <img src={this.state.user.avatar_url} alt={this.state.user.login} className="avatar"/>
           <span className="name">{this.state.user.name}</span>
         </a>
+        &mdash;
+        <a href="/#/logout" className="logout-link">Log Out</a>
       </div>
     );
   }
@@ -243,6 +245,7 @@ var GithubData = React.createClass({
   render: function() {
     return (
       <div>
+        <h1>Girtib Treller</h1>
         <div className="user-details"><UserDetails /></div>
         <div className="commits"><CommitsList /></div>
       </div>
@@ -250,8 +253,17 @@ var GithubData = React.createClass({
   }
 });
 
+var Logout = React.createClass({
+  mixins: [Router.Navigation],
+  render: function() {
+    LocalStorage.delete('token');
+    this.transitionTo('/');
+    return <p></p>;
+  }
+});
+
 var NotFound = React.createClass({
-  render: function () {
+  render: function() {
     return <h1>404 Not Found</h1>;
   }
 });
@@ -262,6 +274,7 @@ var routes = (
     <Route name="authFailure" path="failed-auth" handler={AuthFailure}/>
     <Route name="auth" path="auth/:token" handler={Auth}/>
     <Route name="github" path="github" handler={GithubData}/>
+    <Route name="logout" path="logout" handler={Logout}/>
     <NotFoundRoute handler={NotFound}/>
   </Route>
 );
