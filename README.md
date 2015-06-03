@@ -16,3 +16,5 @@ as your client secret. You also need a session key in env.sh; you can run
     foreman start
 
 Visit [localhost:3001](http://localhost:3001/) in your browser.
+
+![Ermagerd](https://raw.githubusercontent.com/moneypenny/girtib-treller/master/ermagerd.jpg)
