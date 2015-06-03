@@ -4,7 +4,8 @@ exports.RepoGroup = React.createClass({
     var listItems = [];
     for (var i=0; i<this.props.repos.length; i++) {
       var repo = this.props.repos[i];
-      listItems.push(<RepoListItem repo={repo} />)
+      var key = this.props.index + '-' + i;
+      listItems.push(<RepoListItem key={key} index={i} orgIndex={this.props.index} repo={repo} />)
     }
     var checkboxId = 'org-' + this.props.index;
     return (

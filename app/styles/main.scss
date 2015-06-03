@@ -20,6 +20,14 @@ body {
   margin-left: 35px;
 }
 
+.repos-list {
+  .org-list-item {
+    & + .org-list-item {
+      margin-top: 10px;
+    }
+  }
+}
+
 .repo-list-item {
   .repo-link {
     display: inline-block;

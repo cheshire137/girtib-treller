@@ -7,6 +7,9 @@ exports.ReposList = React.createClass({
   componentDidMount: function() {
     Github.getRepos().then(function(repos) {
       console.log(repos.length, 'repositories');
+      repos.sort(function(a, b) {
+        return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+      });
       var orgNames = $.unique(repos.map(function(repo) {
         return repo.owner.login;
       }));
@@ -30,7 +33,8 @@ exports.ReposList = React.createClass({
     var listItems = [];
     var index = 0;
     for (var orgName in this.state.repos) {
-      listItems.push(<RepoGroup index={index} orgName={orgName} repos={this.state.repos[orgName]} />);
+      var key = 'org-' + index;
+      listItems.push(<RepoGroup key={key} index={index} orgName={orgName} repos={this.state.repos[orgName]} />);
       index++;
     }
     return (
