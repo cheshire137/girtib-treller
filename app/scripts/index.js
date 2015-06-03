@@ -1,4 +1,6 @@
-var Router = require('react-router');
+var Router = require('react-router'),
+    Config = require('./config.json'),
+    LocalStorage = require('./localStorage').LocalStorage;
 exports.Index = React.createClass({
   mixins: [Router.Navigation],
   componentWillMount: function() {
