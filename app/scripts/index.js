@@ -16,9 +16,20 @@ exports.Index = React.createClass({
   },
   render: function() {
     return (
-      <div>
-        <h1>Girtib Treller</h1>
-        <p><a href={this.state.authUrl}>Sign in with Github</a></p>
+      <div className="row">
+        <div className="col s6">
+          <p>
+            Browse your Github commits per month per repository, grouped by week.
+            Determine what you did and when, plus how many issues were closed.
+          </p>
+        </div>
+        <div className="col s6">
+          <p className="center">
+            <a className="waves-effect blue waves-light btn-large" href={this.state.authUrl}>
+              Sign in with Github
+            </a>
+          </p>
+        </div>
       </div>
     );
   }
