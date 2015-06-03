@@ -12,14 +12,17 @@ exports.UserDetails = React.createClass({
   },
   render: function() {
     return (
-      <div className="github-user clearfix">
-        <a href={this.state.user.html_url} className="name-and-avatar" target="_blank">
-          <img src={this.state.user.avatar_url} alt={this.state.user.login} className="avatar"/>
-          <span className="name">{this.state.user.name}</span>
-        </a>
-        &mdash;
-        <a href="/#/logout" className="logout-link">Log Out</a>
-      </div>
+      <ul className="user-details right">
+        <li className="github-user">
+          <a href={this.state.user.html_url} className="name-and-avatar" target="_blank">
+            <img src={this.state.user.avatar_url} alt={this.state.user.login} className="avatar"/>
+            <span className="name">{this.state.user.name}</span>
+          </a>
+        </li>
+        <li className="logout-list-item">
+          <a href="/#/logout" className="logout-link">Log Out</a>
+        </li>
+      </ul>
     );
   }
 });

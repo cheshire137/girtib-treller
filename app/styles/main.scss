@@ -1,6 +1,7 @@
 $roboto-font-path: "../fonts/";
 $icons-font-path: "../fonts/";
 @import "materialize/sass/materialize";
+$avatar-height: 30px;
 
 body {
   background: #fafafa;
@@ -14,8 +15,6 @@ body {
   color: #000;
   padding: 0.2em 0;
 }
-
-$avatar-height: 50px;
 
 .org-repos-list {
   margin-left: 1em;
@@ -48,7 +47,7 @@ $avatar-height: 50px;
       max-height: $avatar-height;
       border-radius: 100%;
       display: inline-block;
-      float: left;
+      vertical-align: middle;
     }
 
     .name {
