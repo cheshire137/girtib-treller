@@ -85,6 +85,9 @@ var Github = (function() {
           }.bind(this), defer.reject);
         }.bind(this), defer.reject);
       }.bind(this)).promise();
+    },
+    getCommits: function(fullName) {
+      return this.getJSON('/repos/' + fullName + '/commits');
     }
   };
 })();

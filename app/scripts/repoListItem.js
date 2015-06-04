@@ -5,17 +5,26 @@ var RepoListItem = React.createClass({
     return {checked: this.props.checked};
   },
   onSelected: function() {
-    console.log('enabling', this.props.repo.full_name);
+    this.props.onSelected(this.props.repo);
+  },
+  onDeselected: function() {
+    this.props.onDeselected(this.props.repo);
   },
   componentWillReceiveProps: function(nextProps) {
-    this.setState({checked: nextProps.checked});
-    if (nextProps.checked) {
-      this.onSelected();
+    if (nextProps.checked !== this.state.checked) {
+      if (nextProps.checked) {
+        this.onSelected();
+      } else {
+        this.onDeselected();
+      }
     }
+    this.setState({checked: nextProps.checked});
   },
   handleChange: function(event) {
     this.setState({checked: !this.state.checked});
-    if (!this.state.checked) {
+    if (this.state.checked) {
+      this.onDeselected();
+    } else {
       this.onSelected();
     }
   },
