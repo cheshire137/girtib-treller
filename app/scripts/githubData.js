@@ -4,8 +4,17 @@ var ReposList = require('./reposList'),
     CommitsList = require('./commitsList'),
     React = require('react');
 var GithubData = React.createClass({
+  getInitialState: function() {
+    return {selectedRepos: [], user: false, year: false, month: false,
+            lastDay: false};
+  },
+  onUserFetch: function(user) {
+    console.log('user fetched', user.login);
+    this.setState({user: user});
+  },
   onReposChange: function(selectedRepos) {
     console.log(selectedRepos.length, 'repos selected');
+    this.setState({selectedRepos: selectedRepos});
   },
   render: function() {
     return (
@@ -15,7 +24,7 @@ var GithubData = React.createClass({
             <a href="/#/" className="brand-logo center blue-text text-lighten-5">
               Girtib Treller
             </a>
-            <UserDetails />
+            <UserDetails onUserFetch={this.onUserFetch} />
           </div>
         </nav>
         <div className="container">
@@ -26,7 +35,7 @@ var GithubData = React.createClass({
             </div>
             <div className="col s7">
               <h2 className="commits-header">Commits</h2>
-              <CommitsList />
+              <CommitsList user={this.state.user} repos={this.state.selectedRepos} />
             </div>
           </div>
         </div>

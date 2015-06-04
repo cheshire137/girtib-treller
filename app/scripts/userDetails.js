@@ -8,6 +8,7 @@ var UserDetails = React.createClass({
   componentDidMount: function() {
     Github.getUser().then(function(user) {
       this.setState({user: user});
+      this.props.onUserFetch(user);
     }.bind(this), function() {
       console.error('failed to fetch Github user details');
     });

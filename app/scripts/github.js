@@ -55,6 +55,7 @@ var Github = (function() {
             var status = statuses[orgName];
             if (status === 'pending') {
               finished = false;
+              break;
             }
           }
           if (finished) {
@@ -86,8 +87,51 @@ var Github = (function() {
         }.bind(this), defer.reject);
       }.bind(this)).promise();
     },
-    getCommits: function(fullName) {
-      return this.getJSON('/repos/' + fullName + '/commits');
+    getCommits: function(fullName, author, sinceDate, untilDate) {
+      var sinceStr = sinceDate.toISOString();
+      var untilStr = untilDate.toISOString();
+      var url = '/repos/' + fullName + '/commits?author=' +
+                encodeURIComponent(author) + '&since=' + sinceStr +
+                '&until=' + untilStr;
+      return this.getJSON(url);
+    },
+    getCommitsFromRepos: function(repos, author, sinceDate, untilDate) {
+      return $.Deferred(function(defer) {
+        var statuses = {};
+        var allCommits = [];
+        var resolveIfNecessary = function() {
+          var finished = true;
+          for (var repoFullName in statuses) {
+            var status = statuses[repoFullName];
+            console.log(repoFullName, status);
+            if (status === 'pending') {
+              finished = false;
+              break;
+            }
+          }
+          if (finished) {
+            console.log('finished fetching commits');
+            defer.resolve(allCommits);
+          }
+        };
+        var fullNames = [];
+        for (var i=0; i<repos.length; i++) {
+          fullNames.push(repos[i].full_name);
+        }
+        console.log('fetching commits for', fullNames);
+        fullNames.forEach(function(fullName) {
+          statuses[fullName] = 'pending';
+          this.getCommits(fullName, author, sinceDate, untilDate).
+               success(function(repoCommits) {
+                 allCommits = allCommits.concat(repoCommits);
+                 statuses[fullName] = 'success';
+                 resolveIfNecessary();
+               }).error(function() {
+                 statuses[fullName] = 'failure';
+                 resolveIfNecessary();
+               });
+        }.bind(this));
+      }.bind(this)).promise();
     }
   };
 })();
