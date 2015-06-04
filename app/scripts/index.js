@@ -1,7 +1,9 @@
+'use strict';
 var Router = require('react-router'),
     Config = require('./config.json'),
-    LocalStorage = require('./localStorage').LocalStorage;
-exports.Index = React.createClass({
+    LocalStorage = require('./localStorage'),
+    React = require('react');
+var Index = React.createClass({
   mixins: [Router.Navigation],
   componentWillMount: function() {
     var token = LocalStorage.get('token');
@@ -45,3 +47,4 @@ exports.Index = React.createClass({
     );
   }
 });
+module.exports = Index;

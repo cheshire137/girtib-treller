@@ -1,15 +1,16 @@
+'use strict';
 var React = window.React = require('react'),
     mountNode = document.getElementById('app'),
     Config = require('./config.json'),
     Router = require('react-router'),
-    LocalStorage = require('./localStorage').LocalStorage,
-    Github = require('./github').Github,
-    Index = require('./index').Index,
-    AuthFailure = require('./authFailure').AuthFailure,
-    Auth = require('./auth').Auth,
-    GithubData = require('./githubData').GithubData,
-    Logout = require('./logout').Logout,
-    NotFound = require('./notFound').NotFound;
+    LocalStorage = require('./localStorage'),
+    Github = require('./github'),
+    Index = require('./index'),
+    AuthFailure = require('./authFailure'),
+    Auth = require('./auth'),
+    GithubData = require('./githubData'),
+    Logout = require('./logout'),
+    NotFound = require('./notFound');
 var {
   Route,
   DefaultRoute,

@@ -1,5 +1,7 @@
-var Config = require('./config.json');
-exports.LocalStorage = (function() {
+'use strict';
+var Config = require('./config.json'),
+    React = require('react');
+var LocalStorage = (function() {
   return {
     getJSON: function() {
       if (!window.localStorage) {
@@ -25,3 +27,4 @@ exports.LocalStorage = (function() {
     }
   };
 })();
+module.exports = LocalStorage;

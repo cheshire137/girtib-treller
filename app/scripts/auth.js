@@ -1,6 +1,8 @@
+'use strict';
 var Router = require('react-router'),
-    LocalStorage = require('./localStorage').LocalStorage;
-exports.Auth = React.createClass({
+    LocalStorage = require('./localStorage'),
+    React = require('react');
+var Auth = React.createClass({
   mixins: [Router.Navigation],
   contextTypes: {
     router: React.PropTypes.func
@@ -13,3 +15,4 @@ exports.Auth = React.createClass({
     return <p></p>;
   }
 });
+module.exports = Auth;

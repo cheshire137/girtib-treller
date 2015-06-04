@@ -1,5 +1,7 @@
-var RepoListItem = require('./repoListItem').RepoListItem;
-exports.RepoGroup = React.createClass({
+'use strict';
+var RepoListItem = require('./repoListItem'),
+    React = require('react');
+var RepoGroup = React.createClass({
   getInitialState: function() {
     return {checked: false};
   },
@@ -26,3 +28,4 @@ exports.RepoGroup = React.createClass({
     );
   }
 });
+module.exports = RepoGroup;

@@ -1,6 +1,8 @@
+'use strict';
 var Router = require('react-router'),
-    LocalStorage = require('./localStorage').LocalStorage;
-exports.Logout = React.createClass({
+    LocalStorage = require('./localStorage'),
+    React = require('react');
+var Logout = React.createClass({
   mixins: [Router.Navigation],
   render: function() {
     LocalStorage.delete('token');
@@ -8,3 +10,4 @@ exports.Logout = React.createClass({
     return <p></p>;
   }
 });
+module.exports = Logout;

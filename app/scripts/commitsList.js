@@ -1,5 +1,7 @@
-var moment = require('moment');
-exports.CommitsList = React.createClass({
+'use strict';
+var moment = require('moment'),
+    React = require('react');
+var CommitsList = React.createClass({
   getMonthOptions: function() {
     var monthsToShow = 3;
     var options = [];
@@ -34,3 +36,4 @@ exports.CommitsList = React.createClass({
     );
   }
 });
+module.exports = CommitsList;

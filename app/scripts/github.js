@@ -1,5 +1,7 @@
-var LocalStorage = require('./localStorage').LocalStorage;
-exports.Github = (function() {
+'use strict';
+var LocalStorage = require('./localStorage'),
+    React = require('react');
+var Github = (function() {
   return {
     apiUrl: 'https://api.github.com',
     getHeaders: function() {
@@ -86,3 +88,4 @@ exports.Github = (function() {
     }
   };
 })();
+module.exports = Github;

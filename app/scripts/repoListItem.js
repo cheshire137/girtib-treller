@@ -1,12 +1,23 @@
-exports.RepoListItem = React.createClass({
+'use strict';
+var React = require('react');
+var RepoListItem = React.createClass({
   getInitialState: function() {
     return {checked: this.props.checked};
   },
+  onSelected: function() {
+    console.log('enabling', this.props.repo.full_name);
+  },
   componentWillReceiveProps: function(nextProps) {
     this.setState({checked: nextProps.checked});
+    if (nextProps.checked) {
+      this.onSelected();
+    }
   },
   handleChange: function(event) {
     this.setState({checked: !this.state.checked});
+    if (!this.state.checked) {
+      this.onSelected();
+    }
   },
   render: function() {
     var icon = this.props.repo.private ? (
@@ -27,3 +38,4 @@ exports.RepoListItem = React.createClass({
     );
   }
 });
+module.exports = RepoListItem;

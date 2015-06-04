@@ -1,4 +1,6 @@
-exports.AuthFailure = React.createClass({
+'use strict';
+var React = require('react');
+var AuthFailure = React.createClass({
   render: function() {
     return (
       <p>
@@ -8,3 +10,4 @@ exports.AuthFailure = React.createClass({
     );
   }
 });
+module.exports = AuthFailure;

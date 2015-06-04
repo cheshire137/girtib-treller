@@ -1,6 +1,8 @@
-var Github = require('./github').Github,
-    RepoGroup = require('./repoGroup').RepoGroup;
-exports.ReposList = React.createClass({
+'use strict';
+var Github = require('./github'),
+    RepoGroup = require('./repoGroup'),
+    React = require('react');
+var ReposList = React.createClass({
   getInitialState: function() {
     return {repos: {}};
   },
@@ -38,7 +40,10 @@ exports.ReposList = React.createClass({
       index++;
     }
     return (
-      <ul className="repos-list">{listItems}</ul>
+      <ul className="repos-list">
+        {listItems}
+      </ul>
     );
   }
 });
+module.exports = ReposList;

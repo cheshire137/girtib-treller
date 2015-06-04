@@ -1,5 +1,7 @@
-var Github = require('./github').Github;
-exports.UserDetails = React.createClass({
+'use strict';
+var Github = require('./github'),
+    React = require('react');
+var UserDetails = React.createClass({
   getInitialState: function() {
     return {user: {}};
   },
@@ -26,3 +28,4 @@ exports.UserDetails = React.createClass({
     );
   }
 });
+module.exports = UserDetails;

@@ -1,7 +1,9 @@
-var ReposList = require('./reposList').ReposList,
-    UserDetails = require('./userDetails').UserDetails,
-    CommitsList = require('./commitsList').CommitsList;
-exports.GithubData = React.createClass({
+'use strict';
+var ReposList = require('./reposList'),
+    UserDetails = require('./userDetails'),
+    CommitsList = require('./commitsList'),
+    React = require('react');
+var GithubData = React.createClass({
   render: function() {
     return (
       <div className="github-data">
@@ -29,3 +31,4 @@ exports.GithubData = React.createClass({
     );
   }
 });
+module.exports = GithubData;
