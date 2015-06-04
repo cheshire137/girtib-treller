@@ -3,16 +3,51 @@ var RepoListItem = require('./repoListItem'),
     React = require('react');
 var RepoGroup = React.createClass({
   getInitialState: function() {
-    return {checked: false};
+    return {checked: false, selectedRepos: []};
   },
   handleChange: function(event) {
     this.setState({checked: !this.state.checked});
+    var newSelectedRepos;
+    if (this.state.checked) {
+      console.log('disabling all in', this.props.orgName);
+      newSelectedRepos = [];
+    } else {
+      console.log('enabling all in', this.props.orgName);
+      newSelectedRepos = this.props.repos.slice();
+    }
+    this.setState({selectedRepos: newSelectedRepos});
+    this.props.onReposChange(this.props.orgName, newSelectedRepos);
   },
   onRepoSelected: function(repo) {
+    for (var i=0; i<this.state.selectedRepos.length; i++) {
+      if (this.state.selectedRepos[i].full_name === repo.full_name) {
+        return;
+      }
+    }
     console.log('enabling', repo.full_name);
+    var newSelectedRepos = this.state.selectedRepos.concat([repo]);
+    console.log('selected:', newSelectedRepos.map(function(r) { return r.full_name; }));
+    this.setState({selectedRepos: newSelectedRepos});
+    this.props.onReposChange(this.props.orgName, newSelectedRepos);
   },
   onRepoDeselected: function(repo) {
+    var index = -1;
+    for (var i=0; i<this.state.selectedRepos.length; i++) {
+      if (this.state.selectedRepos[i].full_name === repo.full_name) {
+        index = i;
+        break;
+      }
+    }
+    if (index < 0) {
+      return;
+    }
     console.log('disabling', repo.full_name);
+    var newSelectedRepos = this.state.selectedRepos.slice(0, index).
+        concat(this.state.selectedRepos.slice(index + 1,
+                                              this.state.selectedRepos.length));
+    console.log('selected:', newSelectedRepos.map(function(r) { return r.full_name; }));
+    this.setState({selectedRepos: newSelectedRepos});
+    this.props.onReposChange(this.props.orgName, newSelectedRepos);
   },
   render: function() {
     var listItems = [];

@@ -4,7 +4,27 @@ var Github = require('./github'),
     React = require('react');
 var ReposList = React.createClass({
   getInitialState: function() {
-    return {repos: {}};
+    return {repos: {}, selectedRepos: []};
+  },
+  onReposChange: function(orgName, selectedRepos) {
+    var otherGroupRepos = [];
+    for (var i=0; i<this.state.selectedRepos.length; i++) {
+      var repo = this.state.selectedRepos[i];
+      if (repo.owner.login !== orgName) {
+        otherGroupRepos.push(repo);
+      }
+    }
+    var allSelectedRepos = otherGroupRepos.concat(selectedRepos);
+    var dupes = {};
+    var singles = [];
+    $.each(allSelectedRepos, function(i, repo) {
+      if (!dupes[repo.full_name]) {
+        dupes[repo.full_name] = true;
+        singles.push(repo);
+      }
+    });
+    this.setState({selectedRepos: singles});
+    this.props.onReposChange(singles);
   },
   componentDidMount: function() {
     Github.getRepos().then(function(repos) {
@@ -36,7 +56,7 @@ var ReposList = React.createClass({
     var index = 0;
     for (var orgName in this.state.repos) {
       var key = 'org-' + index;
-      listItems.push(<RepoGroup key={key} index={index} orgName={orgName} repos={this.state.repos[orgName]} />);
+      listItems.push(<RepoGroup key={key} index={index} orgName={orgName} repos={this.state.repos[orgName]} onReposChange={this.onReposChange} />);
       index++;
     }
     return (

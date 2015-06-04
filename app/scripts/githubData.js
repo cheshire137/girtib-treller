@@ -4,6 +4,9 @@ var ReposList = require('./reposList'),
     CommitsList = require('./commitsList'),
     React = require('react');
 var GithubData = React.createClass({
+  onReposChange: function(selectedRepos) {
+    console.log(selectedRepos.length, 'repos selected');
+  },
   render: function() {
     return (
       <div className="github-data">
@@ -19,7 +22,7 @@ var GithubData = React.createClass({
           <div className="row">
             <div className="col s5">
               <h2 className="repos-header">Repositories</h2>
-              <ReposList />
+              <ReposList onReposChange={this.onReposChange} />
             </div>
             <div className="col s7">
               <h2 className="commits-header">Commits</h2>
