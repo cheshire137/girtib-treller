@@ -4,7 +4,7 @@ var moment = require('moment'),
     Github = require('./github');
 var CommitsList = React.createClass({
   getInitialState: function() {
-    return {monthStr: ''};
+    return {monthStr: '', commits: []};
   },
   getMonthOptions: function() {
     var monthsToShow = 3;
@@ -50,13 +50,43 @@ var CommitsList = React.createClass({
            then(function(commits) {
              console.log(commits.length, 'commits');
              console.log(commits[0]);
-           }, function() {
+             this.setState({commits: commits});
+           }.bind(this), function() {
              console.error('failed to fetch all commits');
            });
   },
+  componentDidUpdate: function(prevProps, prevState) {
+    console.log('componentDidUpdate');
+    console.log('prev user', prevProps.user.login);
+    console.log('current user', this.props.user.login);
+    if (prevProps.user.login == this.props.user.login) {
+      console.log('user did not change');
+      var repoFullNameMapper = function(repo) {
+        return repo.full_name;
+      };
+      var prevRepoFullNames = prevProps.repos.map(repoFullNameMapper);
+      var curRepoFullNames = this.props.repos.map(repoFullNameMapper);
+      var sameRepoFullNames = $(prevRepoFullNames).not(curRepoFullNames).length === 0 &&
+                              $(curRepoFullNames).not(prevRepoFullNames).length === 0;
+      if (sameRepoFullNames) {
+        console.log('repos did not change');
+        return;
+      }
+    }
+    this.fetchCommits();
+  },
   render: function() {
     var monthOptions = this.getMonthOptions();
-    var commits = this.fetchCommits();
+    console.log('commits', this.state.commits);
+    var commitListItems = this.state.commits.map(function(commit) {
+      return (
+        <li className="commit-list-item">
+          <a href={commit.html_url} target="_blank" className="commit-link">
+            {commit.commit.message}
+          </a>
+        </li>
+      );
+    });
     return (
       <div>
         <label htmlFor="month-select">Month:</label>
@@ -64,7 +94,7 @@ var CommitsList = React.createClass({
           <option value="" selected="selected">Choose a month</option>
           {monthOptions}
         </select>
-        {commits}
+        <ul className="commits-list">{commitListItems}</ul>
       </div>
     );
   }

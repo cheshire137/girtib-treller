@@ -5,8 +5,7 @@ var ReposList = require('./reposList'),
     React = require('react');
 var GithubData = React.createClass({
   getInitialState: function() {
-    return {selectedRepos: [], user: false, year: false, month: false,
-            lastDay: false};
+    return {selectedRepos: [], user: {}};
   },
   onUserFetch: function(user) {
     console.log('user fetched', user.login);

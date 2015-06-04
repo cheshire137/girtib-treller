@@ -45,33 +45,34 @@ var Github = (function() {
     getOrgRepos: function(orgName) {
       return this.getJSON('/orgs/' + orgName + '/repos');
     },
+    resolveIfNecessary: function(statuses, callback) {
+      var finished = true;
+      for (var key in statuses) {
+        var status = statuses[key];
+        if (status === 'pending') {
+          finished = false;
+          break;
+        }
+      }
+      if (finished) {
+        callback();
+      }
+    },
     getAllOrgRepos: function(orgNames) {
       return $.Deferred(function(defer) {
         var statuses = {};
         var allRepos = [];
-        var resolveIfNecessary = function() {
-          var finished = true;
-          for (var orgName in statuses) {
-            var status = statuses[orgName];
-            if (status === 'pending') {
-              finished = false;
-              break;
-            }
-          }
-          if (finished) {
-            defer.resolve(allRepos);
-          }
-        };
+        var callback = function() { defer.resolve(allRepos); };
         orgNames.forEach(function(name) {
           statuses[name] = 'pending';
           this.getOrgRepos(name).success(function(orgRepos) {
             allRepos = allRepos.concat(orgRepos);
             statuses[name] = 'success'
-            resolveIfNecessary();
-          }).error(function() {
+            this.resolveIfNecessary(statuses, callback);
+          }.bind(this)).error(function() {
             statuses[name] = 'failure';
-            resolveIfNecessary();
-          });
+            this.resolveIfNecessary(statuses, callback);
+          }.bind(this));
         }.bind(this));
       }.bind(this)).promise();
     },
@@ -99,21 +100,7 @@ var Github = (function() {
       return $.Deferred(function(defer) {
         var statuses = {};
         var allCommits = [];
-        var resolveIfNecessary = function() {
-          var finished = true;
-          for (var repoFullName in statuses) {
-            var status = statuses[repoFullName];
-            console.log(repoFullName, status);
-            if (status === 'pending') {
-              finished = false;
-              break;
-            }
-          }
-          if (finished) {
-            console.log('finished fetching commits');
-            defer.resolve(allCommits);
-          }
-        };
+        var callback = function() { defer.resolve(allCommits); };
         var fullNames = [];
         for (var i=0; i<repos.length; i++) {
           fullNames.push(repos[i].full_name);
@@ -125,11 +112,11 @@ var Github = (function() {
                success(function(repoCommits) {
                  allCommits = allCommits.concat(repoCommits);
                  statuses[fullName] = 'success';
-                 resolveIfNecessary();
-               }).error(function() {
+                 this.resolveIfNecessary(statuses, callback);
+               }.bind(this)).error(function() {
                  statuses[fullName] = 'failure';
-                 resolveIfNecessary();
-               });
+                 this.resolveIfNecessary(statuses, callback);
+               }.bind(this));
         }.bind(this));
       }.bind(this)).promise();
     }
