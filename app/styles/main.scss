@@ -24,11 +24,25 @@ body {
 }
 
 .commits-list {
-  margin-left: 1em;
+  margin-left: 17px;
 
   .commit-list-item {
     .commit-repo {
       color: #9E9E9E;
+    }
+
+    time {
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      color: #777;
+      display: inline-block;
+      margin-left: 0.3em;
+    }
+
+    & + .commit-list-item {
+      margin-top: 10px;
+      border-top: 1px solid #ccc;
+      padding-top: 10px;
     }
   }
 }
@@ -68,6 +82,20 @@ body {
       margin-top: 10px;
       border-top: 1px solid #CCC;
       padding-top: 10px;
+    }
+  }
+}
+
+.commits-by-repo-list {
+  .commits-by-repo-list-item {
+    .repo-full-name {
+      .octicon {
+        margin-right: 5px;
+      }
+    }
+
+    & + .commits-by-repo-list-item {
+      margin-top: 40px;
     }
   }
 }

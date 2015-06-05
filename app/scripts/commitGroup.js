@@ -16,16 +16,18 @@ var CommitGroup = React.createClass({
     });
     var commitListItemsByRepo = repoFullNames.map(function(repoFullName) {
       var commitListItems = commitsByRepo[repoFullName].map(function(commit) {
+        var timestamp = moment(commit.commit.author.date).format('ddd MMM Mo h:mm a');
         return (
           <li className="commit-list-item">
             <a href={commit.html_url} target="_blank" className="commit-link">
               {commit.commit.message}
             </a>
+            <time>{timestamp}</time>
           </li>
         );
       });
       return (
-        <li>
+        <li className="commits-by-repo-list-item">
           <span className="repo-full-name">
             <span className="octicon octicon-repo"></span>
             {repoFullName}

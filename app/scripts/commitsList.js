@@ -49,7 +49,6 @@ var CommitsList = React.createClass({
     Github.getCommitsFromRepos(this.props.repos, author, sinceDate, untilDate).
            then(function(commits) {
              console.log(commits.length, 'commits');
-             console.log(commits[0]);
              this.setState({commits: commits});
            }.bind(this), function() {
              console.error('failed to fetch all commits');
