@@ -16,6 +16,14 @@ body {
   padding: 0.2em 0;
 }
 
+.commits-list {
+  .commit-list-item {
+    .commit-repo {
+      color: #9E9E9E;
+    }
+  }
+}
+
 .org-repos-list {
   margin-left: 35px;
 }

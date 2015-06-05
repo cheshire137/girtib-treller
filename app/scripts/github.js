@@ -110,6 +110,9 @@ var Github = (function() {
           statuses[fullName] = 'pending';
           this.getCommits(fullName, author, sinceDate, untilDate).
                success(function(repoCommits) {
+                 for (var i=0; i<repoCommits.length; i++) {
+                   repoCommits[i].full_name = fullName;
+                 }
                  allCommits = allCommits.concat(repoCommits);
                  statuses[fullName] = 'success';
                  this.resolveIfNecessary(statuses, callback);

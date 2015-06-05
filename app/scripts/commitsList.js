@@ -55,23 +55,32 @@ var CommitsList = React.createClass({
              console.error('failed to fetch all commits');
            });
   },
+  isSameUser: function(prevUser) {
+    console.log(prevUser.login, 'vs', this.props.user.login);
+    if (prevUser.login === this.props.user.login) {
+      return true;
+    }
+    return false;
+  },
+  areSameRepos: function(prevRepos) {
+    var repoFullNameMapper = function(repo) { return repo.full_name; };
+    var prevRepoFullNames = prevRepos.map(repoFullNameMapper);
+    var curRepoFullNames = this.props.repos.map(repoFullNameMapper);
+    console.log(prevRepoFullNames, 'vs', curRepoFullNames);
+    return $(prevRepoFullNames).not(curRepoFullNames).length === 0 &&
+           $(curRepoFullNames).not(prevRepoFullNames).length === 0;
+  },
+  isSameMonth: function(prevMonthStr) {
+    return prevMonthStr === this.state.monthStr;
+  },
   componentDidUpdate: function(prevProps, prevState) {
     console.log('componentDidUpdate');
-    console.log('prev user', prevProps.user.login);
-    console.log('current user', this.props.user.login);
-    if (prevProps.user.login == this.props.user.login) {
-      console.log('user did not change');
-      var repoFullNameMapper = function(repo) {
-        return repo.full_name;
-      };
-      var prevRepoFullNames = prevProps.repos.map(repoFullNameMapper);
-      var curRepoFullNames = this.props.repos.map(repoFullNameMapper);
-      var sameRepoFullNames = $(prevRepoFullNames).not(curRepoFullNames).length === 0 &&
-                              $(curRepoFullNames).not(prevRepoFullNames).length === 0;
-      if (sameRepoFullNames) {
-        console.log('repos did not change');
-        return;
-      }
+    var sameUser = this.isSameUser(prevProps.user);
+    var sameRepos = this.areSameRepos(prevProps.repos);
+    var sameMonth = this.isSameMonth(prevState.monthStr);
+    if (sameUser && sameRepos && sameMonth) {
+      console.log('data unchanged, not fetching commits');
+      return;
     }
     this.fetchCommits();
   },
@@ -81,6 +90,7 @@ var CommitsList = React.createClass({
     var commitListItems = this.state.commits.map(function(commit) {
       return (
         <li className="commit-list-item">
+          <span className="commit-repo">{commit.full_name}</span> /
           <a href={commit.html_url} target="_blank" className="commit-link">
             {commit.commit.message}
           </a>
