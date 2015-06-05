@@ -36,7 +36,8 @@ var RepoListItem = React.createClass({
     return (
       <li className="repo-list-item">
         <input type="checkbox" checked={this.state.checked} className="filled-in" id={checkboxId} onChange={this.handleChange} />
-        <label htmlFor={checkboxId}>
+        <label className="repo-name" htmlFor={checkboxId}>
+          <span className="octicon octicon-repo"></span>
           {this.props.repo.name}
         </label>
         {icon}

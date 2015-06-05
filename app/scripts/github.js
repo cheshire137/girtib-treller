@@ -80,7 +80,6 @@ var Github = (function() {
       return $.Deferred(function(defer) {
         this.getUserRepos().then(function(userRepos) {
           this.getOrgNames().then(function(orgNames) {
-            console.log(orgNames.length, 'organizations:', orgNames);
             this.getAllOrgRepos(orgNames).then(function(orgRepos) {
               defer.resolve(userRepos.concat(orgRepos));
             }, defer.reject);
@@ -105,7 +104,6 @@ var Github = (function() {
         for (var i=0; i<repos.length; i++) {
           fullNames.push(repos[i].full_name);
         }
-        console.log('fetching commits for', fullNames);
         fullNames.forEach(function(fullName) {
           statuses[fullName] = 'pending';
           this.getCommits(fullName, author, sinceDate, untilDate).

@@ -6,6 +6,7 @@
     "bootstrap-sass-official": ">=3.3.0",
     "modernizr": "^2.8.3",
     "react-router": "~0.13.3",
-    "materialize": "~0.96.1"
+    "materialize": "~0.96.1",
+    "octicons": "*"
   }
 }

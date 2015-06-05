@@ -1,7 +1,8 @@
 'use strict';
 var moment = require('moment'),
     React = require('react'),
-    Github = require('./github');
+    Github = require('./github'),
+    CommitGroup = require('./commitGroup');
 var CommitsList = React.createClass({
   getInitialState: function() {
     return {monthStr: '', commits: []};
@@ -33,8 +34,7 @@ var CommitsList = React.createClass({
   },
   fetchCommits: function() {
     if (!this.props.user || !this.state.monthStr || this.props.repos.length < 1) {
-      console.log('not yet ready to fetch commits');
-      return '--';
+      return;
     }
     var bits = this.state.monthStr.split('-');
     var year = parseInt(bits[0], 10);
@@ -56,7 +56,6 @@ var CommitsList = React.createClass({
            });
   },
   isSameUser: function(prevUser) {
-    console.log(prevUser.login, 'vs', this.props.user.login);
     if (prevUser.login === this.props.user.login) {
       return true;
     }
@@ -66,7 +65,6 @@ var CommitsList = React.createClass({
     var repoFullNameMapper = function(repo) { return repo.full_name; };
     var prevRepoFullNames = prevRepos.map(repoFullNameMapper);
     var curRepoFullNames = this.props.repos.map(repoFullNameMapper);
-    console.log(prevRepoFullNames, 'vs', curRepoFullNames);
     return $(prevRepoFullNames).not(curRepoFullNames).length === 0 &&
            $(curRepoFullNames).not(prevRepoFullNames).length === 0;
   },
@@ -74,7 +72,6 @@ var CommitsList = React.createClass({
     return prevMonthStr === this.state.monthStr;
   },
   componentDidUpdate: function(prevProps, prevState) {
-    console.log('componentDidUpdate');
     var sameUser = this.isSameUser(prevProps.user);
     var sameRepos = this.areSameRepos(prevProps.repos);
     var sameMonth = this.isSameMonth(prevState.monthStr);
@@ -86,17 +83,6 @@ var CommitsList = React.createClass({
   },
   render: function() {
     var monthOptions = this.getMonthOptions();
-    console.log('commits', this.state.commits);
-    var commitListItems = this.state.commits.map(function(commit) {
-      return (
-        <li className="commit-list-item">
-          <span className="commit-repo">{commit.full_name}</span> /
-          <a href={commit.html_url} target="_blank" className="commit-link">
-            {commit.commit.message}
-          </a>
-        </li>
-      );
-    });
     return (
       <div>
         <label htmlFor="month-select">Month:</label>
@@ -104,7 +90,7 @@ var CommitsList = React.createClass({
           <option value="" selected="selected">Choose a month</option>
           {monthOptions}
         </select>
-        <ul className="commits-list">{commitListItems}</ul>
+        <CommitGroup repos={this.props.repos} commits={this.state.commits} monthStr={this.state.monthStr} />
       </div>
     );
   }

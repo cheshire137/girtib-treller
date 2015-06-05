@@ -1,6 +1,10 @@
 $roboto-font-path: "../fonts/";
 $icons-font-path: "../fonts/";
 @import "materialize/sass/materialize";
+
+$octicons-font-path: "../fonts/";
+@import "octicons/octicons/octicons.scss";
+
 $avatar-height: 30px;
 
 body {
@@ -17,6 +21,8 @@ body {
 }
 
 .commits-list {
+  margin-left: 1em;
+
   .commit-list-item {
     .commit-repo {
       color: #9E9E9E;
@@ -36,6 +42,14 @@ body {
   }
 
   .org-list-item {
+    .org-name {
+      color: inherit;
+
+      .octicon {
+        margin-right: 0.3em;
+      }
+    }
+
     & + .org-list-item {
       margin-top: 10px;
     }
@@ -44,6 +58,14 @@ body {
 
 .repo-list-item {
   white-space: nowrap;
+
+  .repo-name {
+    color: inherit;
+
+    .octicon {
+      margin-right: 0.3em;
+    }
+  }
 
   .repo-link {
     display: inline-block;

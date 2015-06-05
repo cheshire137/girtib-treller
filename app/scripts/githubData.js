@@ -8,7 +8,6 @@ var GithubData = React.createClass({
     return {selectedRepos: [], user: {}};
   },
   onUserFetch: function(user) {
-    console.log('user fetched', user.login);
     this.setState({user: user});
   },
   onReposChange: function(selectedRepos) {

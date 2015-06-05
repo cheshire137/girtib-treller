@@ -62,6 +62,7 @@ var RepoGroup = React.createClass({
       <li className="org-list-item">
         <input type="checkbox" checked={this.state.checked} className="filled-in" id={checkboxId} onChange={this.handleChange} />
         <label htmlFor={checkboxId} className="org-name">
+          <span className="octicon octicon-organization"></span>
           {this.props.orgName}
         </label>
         <ul className="org-repos-list">{listItems}</ul>
