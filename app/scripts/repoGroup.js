@@ -9,10 +9,8 @@ var RepoGroup = React.createClass({
     this.setState({checked: !this.state.checked});
     var newSelectedRepos;
     if (this.state.checked) {
-      console.log('disabling all in', this.props.orgName);
       newSelectedRepos = [];
     } else {
-      console.log('enabling all in', this.props.orgName);
       newSelectedRepos = this.props.repos.slice();
     }
     this.setState({selectedRepos: newSelectedRepos});
@@ -58,10 +56,16 @@ var RepoGroup = React.createClass({
       listItems.push(listItem)
     }
     var checkboxId = 'org-' + this.props.index;
+    var labelClass = 'org-name ';
+    if (this.state.checked) {
+      labelClass += 'checked';
+    } else {
+      labelClass += 'unchecked';
+    }
     return (
       <li className="org-list-item">
-        <input type="checkbox" checked={this.state.checked} className="filled-in" id={checkboxId} onChange={this.handleChange} />
-        <label htmlFor={checkboxId} className="org-name">
+        <label htmlFor={checkboxId} className={labelClass}>
+          <input type="checkbox" checked={this.state.checked} className="filled-in" id={checkboxId} onChange={this.handleChange} />
           <span className="octicon octicon-organization"></span>
           {this.props.orgName}
         </label>

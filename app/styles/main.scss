@@ -6,6 +6,9 @@ $octicons-font-path: "../fonts/";
 @import "octicons/octicons/octicons.scss";
 
 $avatar-height: 30px;
+$selected-bg-color: #bbdefb;
+$selected-color: inherit;
+$selected-transition: background 0.1s ease-in-out;
 
 body {
   background: #fafafa;
@@ -31,27 +34,40 @@ body {
 }
 
 .org-repos-list {
-  margin-left: 35px;
+  margin-left: 25px;
 }
 
 .repos-list {
-  [type="checkbox"] + label {
-    line-height: 20px;
-    height: 20px;
-    margin-top: 2px;
-  }
-
   .org-list-item {
     .org-name {
+      cursor: pointer;
+      font-size: inherit;
       color: inherit;
+      padding: 0.2rem 0.4rem;
+      border-radius: 2px;
+      display: inline-block;
+      -webkit-transition: $selected-transition;
+      -moz-transition: $selected-transition;
+      -ms-transition: $selected-transition;
+      -o-transition: $selected-transition;
+      transition: $selected-transition;
+      margin-bottom: 1px;
 
       .octicon {
         margin-right: 0.3em;
+        vertical-align: middle;
+      }
+
+      &.checked {
+        background-color: $selected-bg-color;
+        color: $selected-color;
       }
     }
 
     & + .org-list-item {
       margin-top: 10px;
+      border-top: 1px solid #CCC;
+      padding-top: 10px;
     }
   }
 }
@@ -60,10 +76,27 @@ body {
   white-space: nowrap;
 
   .repo-name {
+    cursor: pointer;
+    font-size: inherit;
     color: inherit;
+    padding: 0.2rem 0.4rem;
+    border-radius: 2px;
+    display: inline-block;
+    -webkit-transition: $selected-transition;
+    -moz-transition: $selected-transition;
+    -ms-transition: $selected-transition;
+    -o-transition: $selected-transition;
+    transition: $selected-transition;
+    margin-bottom: 1px;
 
     .octicon {
       margin-right: 0.3em;
+      vertical-align: middle;
+    }
+
+    &.checked {
+      background-color: $selected-bg-color;
+      color: $selected-color;
     }
   }
 

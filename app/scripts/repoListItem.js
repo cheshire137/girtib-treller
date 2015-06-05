@@ -33,10 +33,16 @@ var RepoListItem = React.createClass({
       <span data-tooltip="Private" data-position="right" className="tooltipped private-indicator mdi-action-lock"></span>
     ) : '';
     var checkboxId = 'repo-' + this.props.orgIndex + '-' + this.props.index;
+    var labelClass = 'repo-name ';
+    if (this.state.checked) {
+      labelClass += 'checked';
+    } else {
+      labelClass += 'unchecked';
+    }
     return (
       <li className="repo-list-item">
-        <input type="checkbox" checked={this.state.checked} className="filled-in" id={checkboxId} onChange={this.handleChange} />
-        <label className="repo-name" htmlFor={checkboxId}>
+        <label className={labelClass} htmlFor={checkboxId}>
+          <input type="checkbox" checked={this.state.checked} id={checkboxId} onChange={this.handleChange} />
           <span className="octicon octicon-repo"></span>
           {this.props.repo.name}
         </label>
