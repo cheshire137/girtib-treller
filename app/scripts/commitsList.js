@@ -5,10 +5,16 @@ var moment = require('moment'),
     CommitGroup = require('./commitGroup');
 var CommitsList = React.createClass({
   getInitialState: function() {
-    return {monthStr: '', commits: []};
+    var curDate = new Date();
+    var curMonth = curDate.getMonth() + 1;
+    if (curMonth < 10) {
+      curMonth = '0' + curMonth;
+    }
+    var curYear = curDate.getFullYear();
+    return {monthStr: curYear + '-' + curMonth, commits: []};
   },
   getMonthOptions: function() {
-    var monthsToShow = 3;
+    var monthsToShow = 24;
     var options = [];
     var curDay = new Date().getDay();
     var monthIndex;
@@ -17,7 +23,7 @@ var CommitsList = React.createClass({
     } else {
       monthIndex = 1;
     }
-    for (var i=0; i<=3; i++) {
+    for (var i=0; i<=monthsToShow; i++) {
       var date = moment().subtract(i, 'months');
       var label = date.format('MMMM YYYY');
       var value = date.format('YYYY-MM');

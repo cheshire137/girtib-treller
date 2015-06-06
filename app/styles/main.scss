@@ -89,6 +89,9 @@ body {
 .commits-by-repo-list {
   .commits-by-repo-list-item {
     .repo-full-name {
+      display: block;
+      margin-bottom: 10px;
+
       .octicon {
         margin-right: 5px;
       }
