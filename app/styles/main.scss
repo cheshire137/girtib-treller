@@ -28,6 +28,19 @@ main {
   padding: 0.2em 0;
 }
 
+.commits-by-week-list-item {
+  .week {
+    display: block;
+    padding: 3px 17px;
+    background-color: #EFEFEF;
+    margin-bottom: 10px;
+  }
+
+  & + .commits-by-week-list-item {
+    margin-top: 20px;
+  }
+}
+
 .page-footer {
   ul {
     margin-top: 0;
@@ -42,6 +55,10 @@ main {
       color: #9E9E9E;
     }
 
+    .octicon {
+      margin-right: 5px;
+    }
+
     time {
       text-transform: uppercase;
       font-size: 0.9rem;
@@ -52,8 +69,6 @@ main {
 
     & + .commit-list-item {
       margin-top: 10px;
-      border-top: 1px solid #ccc;
-      padding-top: 10px;
     }
   }
 }
