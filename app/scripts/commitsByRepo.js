@@ -6,7 +6,7 @@ var CommitsByRepo = React.createClass({
   render: function() {
     var commitsByWeek = {};
     var weeks = $.unique(this.props.commits.map(function(commit) {
-      var dateStr = commit.commit.author.date
+      var dateStr = commit.commit.committer.date;
       var weekStart = moment(dateStr).startOf('week');
       var weekEnd = moment(dateStr).endOf('week');
       var curMonth = moment(dateStr).toDate().getMonth();

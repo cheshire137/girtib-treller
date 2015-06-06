@@ -14,7 +14,8 @@ var CommitsList = React.createClass({
     var bits = this.props.monthStr.split('-');
     var year = parseInt(bits[0], 10);
     var month = parseInt(bits[1], 10);
-    var lastDayStr = moment(this.props.monthStr + '-01').endOf('month').format('D');
+    var lastDayStr = moment(this.props.monthStr + '-01', 'YYYY-MM-DD').
+        endOf('month').format('D');
     var lastDay = parseInt(lastDayStr, 10);
     var author = this.props.user.login;
     var sinceDate = new Date(year, month - 1, 1);
