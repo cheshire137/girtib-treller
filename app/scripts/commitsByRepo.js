@@ -3,30 +3,13 @@ var React = require('react'),
     moment = require('moment'),
     CommitsByWeek = require('./commitsByWeek');
 var CommitsByRepo = React.createClass({
-  getClosestPreviousSunday: function(startDate) {
-    var d = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
-    d.setDate(d.getDate() - d.getDay());
-    return d;
-  },
   render: function() {
     var commitsByWeek = {};
     var weeks = $.unique(this.props.commits.map(function(commit) {
-      var momentDate = moment(commit.commit.author.date);
-      var date = momentDate.toDate();
-      var month = date.getMonth() + 1;
-      var week;
-      if (date.getDate() === 1) {
-        week = momentDate.format('M/D/YYYY');
-      } else {
-        var sundayDate = this.getClosestPreviousSunday(date);
-        var sundayMonth = sundayDate.getMonth() + 1;
-        if (sundayMonth < month) {
-          week = month + '/1/' + date.getFullYear();
-        } else {
-          week = sundayMonth + '/' + sundayDate.getDate() + '/' +
-                 sundayDate.getFullYear();
-        }
-      }
+      var dateStr = commit.commit.author.date
+      var weekStart = moment(dateStr).startOf('week').format('M/D/YYYY');
+      var weekEnd = moment(dateStr).endOf('week').format('M/D/YYYY');
+      var week = weekStart + ' - ' + weekEnd;
       if (typeof commitsByWeek[week] === 'undefined') {
         commitsByWeek[week] = [];
       }
@@ -57,7 +40,7 @@ var CommitsByRepo = React.createClass({
             {commitCount} {commitCountLabel}
           </span>
         </span>
-        <ul className="commits-list">
+        <ul className="commits-by-week-list">
           {commitListItemsByWeek}
         </ul>
       </li>

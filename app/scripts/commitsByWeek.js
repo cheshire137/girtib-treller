@@ -8,12 +8,10 @@ var CommitsByWeek = React.createClass({
       var key = 'commit-' + commit.sha;
       return <CommitListItem key={key} commit={commit} />;
     });
-    var weekEndLabel = moment(this.props.week, 'M/D/YYYY').endOf('week').
-                                                           format('M/D/YYYY');
     return (
       <li className="commits-by-week-list-item">
         <span className="week">
-          {this.props.week} - {weekEndLabel}
+          {this.props.week}
         </span>
         <ul className="commits-list">
           {commitListItems}
