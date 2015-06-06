@@ -16,7 +16,8 @@ var CommitGroup = React.createClass({
     });
     var commitListItemsByRepo = repoFullNames.map(function(repoFullName) {
       var commitListItems = commitsByRepo[repoFullName].map(function(commit) {
-        var timestamp = moment(commit.commit.author.date).format('ddd MMM Mo h:mm a');
+        var date = commit.commit.author.date.slice(0, 10); // date only
+        var timestamp = moment(date).format('ddd D MMM');
         return (
           <li className="commit-list-item">
             <a href={commit.html_url} target="_blank" className="commit-link">
