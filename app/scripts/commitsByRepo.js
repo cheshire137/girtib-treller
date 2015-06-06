@@ -21,7 +21,6 @@ var CommitsByRepo = React.createClass({
       var bDate = moment(b, 'M/D/YYYY').toDate();
       return aDate - bDate;
     });
-    console.log(weeks);
     var commitListItemsByWeek = weeks.map(function(week) {
       var key = 'week-' + week;
       return <CommitsByWeek key={key} commits={commitsByWeek[week]} week={week} />;

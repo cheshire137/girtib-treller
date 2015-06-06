@@ -27,7 +27,7 @@ var GithubData = React.createClass({
         </nav>
         <div className="container">
           <div className="row">
-            <div className="col s5">
+            <div className="col s5 l4">
               <h2 className="repos-header">
                 Repositories
                 <span className="badge">
@@ -36,7 +36,7 @@ var GithubData = React.createClass({
               </h2>
               <ReposList onReposChange={this.onReposChange} />
             </div>
-            <div className="col s7">
+            <div className="col s7 l8">
               <h2 className="commits-header">Your Commits</h2>
               <CommitsList user={this.state.user} repos={this.state.selectedRepos} />
             </div>
