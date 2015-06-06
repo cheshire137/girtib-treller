@@ -16,7 +16,7 @@ var CommitGroup = React.createClass({
     });
     var commitListItemsByRepo = repoFullNames.map(function(repoFullName) {
       var commitListItems = commitsByRepo[repoFullName].map(function(commit) {
-        var date = commit.commit.author.date.slice(0, 10); // date only
+        var date = commit.commit.author.date;
         var timestamp = moment(date).format('ddd D MMM');
         return (
           <li className="commit-list-item">
@@ -27,11 +27,19 @@ var CommitGroup = React.createClass({
           </li>
         );
       });
+      var commitCount = commitsByRepo[repoFullName].length;
+      var commitCountLabel = 'commit';
+      if (commitCount !== 1) {
+        commitCountLabel += 's';
+      }
       return (
         <li className="commits-by-repo-list-item">
           <span className="repo-full-name">
             <span className="octicon octicon-repo"></span>
             {repoFullName}
+            <span className="badge repo-commit-count">
+              {commitCount} {commitCountLabel}
+            </span>
           </span>
           <ul className="commits-list">
             {commitListItems}
