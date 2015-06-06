@@ -5,56 +5,22 @@ var moment = require('moment'),
     CommitGroup = require('./commitGroup');
 var CommitsList = React.createClass({
   getInitialState: function() {
-    var curDate = new Date();
-    var curMonth = curDate.getMonth();
-    if (curDate.getDate() >= 15) {
-      curMonth = curDate.getMonth() + 1;
-    }
-    if (curMonth < 10) {
-      curMonth = '0' + curMonth;
-    }
-    var curYear = curDate.getFullYear();
-    return {monthStr: curYear + '-' + curMonth, commits: []};
-  },
-  getMonthOptions: function() {
-    var monthsToShow = 24;
-    var options = [];
-    var curDay = new Date().getDay();
-    var monthIndex;
-    if (curDay >= 15) {
-      monthIndex = 0;
-    } else {
-      monthIndex = 1;
-    }
-    for (var i=0; i<=monthsToShow; i++) {
-      var date = moment().subtract(i, 'months');
-      var label = date.format('MMMM YYYY');
-      var value = date.format('YYYY-MM');
-      var option = (
-        <option value={value}>{label}</option>
-      );
-      options.push(option);
-    }
-    return options;
-  },
-  handleChange: function(event) {
-    var monthStr = event.target.value;
-    this.setState({monthStr: monthStr});
+    return {commits: []};
   },
   fetchCommits: function() {
-    if (!this.props.user || !this.state.monthStr || this.props.repos.length < 1) {
+    if (!this.props.user || !this.props.monthStr || this.props.repos.length < 1) {
       return;
     }
-    var bits = this.state.monthStr.split('-');
+    var bits = this.props.monthStr.split('-');
     var year = parseInt(bits[0], 10);
     var month = parseInt(bits[1], 10);
-    var lastDayStr = moment(this.state.monthStr + '-01').endOf('month').format('D');
+    var lastDayStr = moment(this.props.monthStr + '-01').endOf('month').format('D');
     var lastDay = parseInt(lastDayStr, 10);
     var author = this.props.user.login;
     var sinceDate = new Date(year, month - 1, 1);
     var untilDate = new Date(year, month - 1, lastDay);
     console.log('fetching commits for ', this.props.repos.length, 'repos', author,
-                sinceDate, untilDate);
+                this.props.monthStr);
     Github.getCommitsFromRepos(this.props.repos, author, sinceDate, untilDate).
            then(function(commits) {
              console.log(commits.length, 'commits');
@@ -77,12 +43,12 @@ var CommitsList = React.createClass({
            $(curRepoFullNames).not(prevRepoFullNames).length === 0;
   },
   isSameMonth: function(prevMonthStr) {
-    return prevMonthStr === this.state.monthStr;
+    return prevMonthStr === this.props.monthStr;
   },
   componentDidUpdate: function(prevProps, prevState) {
     var sameUser = this.isSameUser(prevProps.user);
     var sameRepos = this.areSameRepos(prevProps.repos);
-    var sameMonth = this.isSameMonth(prevState.monthStr);
+    var sameMonth = this.isSameMonth(prevProps.monthStr);
     if (sameUser && sameRepos && sameMonth) {
       console.log('data unchanged, not fetching commits');
       return;
@@ -90,15 +56,8 @@ var CommitsList = React.createClass({
     this.fetchCommits();
   },
   render: function() {
-    var monthOptions = this.getMonthOptions();
     return (
-      <div>
-        <select value={this.state.monthStr} onChange={this.handleChange} className="browser-default" id="month-select">
-          <option value="" selected="selected">Choose a month</option>
-          {monthOptions}
-        </select>
-        <CommitGroup repos={this.props.repos} commits={this.state.commits} monthStr={this.state.monthStr} />
-      </div>
+      <CommitGroup repos={this.props.repos} commits={this.state.commits} monthStr={this.props.monthStr} />
     );
   }
 });

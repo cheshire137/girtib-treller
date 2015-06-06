@@ -1,11 +1,43 @@
 'use strict';
 var ReposList = require('./reposList'),
     UserDetails = require('./userDetails'),
+    moment = require('moment'),
     CommitsList = require('./commitsList'),
     React = require('react');
 var GithubData = React.createClass({
   getInitialState: function() {
-    return {selectedRepos: [], user: {}, showWhat: 'commits'};
+    var curDate = new Date();
+    var curMonth = curDate.getMonth();
+    if (curDate.getDate() >= 15) {
+      curMonth = curDate.getMonth() + 1;
+    }
+    if (curMonth < 10) {
+      curMonth = '0' + curMonth;
+    }
+    var curYear = curDate.getFullYear();
+    return {monthStr: curYear + '-' + curMonth, selectedRepos: [], user: {},
+            showWhat: 'commits'};
+  },
+  getMonthOptions: function() {
+    var monthsToShow = 24;
+    var options = [];
+    var curDay = new Date().getDay();
+    var monthIndex;
+    if (curDay >= 15) {
+      monthIndex = 0;
+    } else {
+      monthIndex = 1;
+    }
+    for (var i=0; i<=monthsToShow; i++) {
+      var date = moment().subtract(i, 'months');
+      var label = date.format('MMMM YYYY');
+      var value = date.format('YYYY-MM');
+      var option = (
+        <option value={value}>{label}</option>
+      );
+      options.push(option);
+    }
+    return options;
   },
   onUserFetch: function(user) {
     this.setState({user: user});
@@ -17,13 +49,17 @@ var GithubData = React.createClass({
   onShowChoiceChange: function(event) {
     this.setState({showWhat: event.target.value});
   },
+  handleMonthChange: function(event) {
+    this.setState({monthStr: event.target.value});
+  },
   render: function() {
     var listing;
     if (this.state.showWhat === 'commits') {
-      listing = <CommitsList user={this.state.user} repos={this.state.selectedRepos} />;
+      listing = <CommitsList monthStr={this.state.monthStr} user={this.state.user} repos={this.state.selectedRepos} />;
     } else {
       listing = '';
     }
+    var monthOptions = this.getMonthOptions();
     return (
       <div className="github-data">
         <nav className="blue darken-4">
@@ -52,6 +88,10 @@ var GithubData = React.createClass({
                 <input type="radio" value="issues" name="showWhat" id="issues-choice" checked={this.state.showWhat === 'issues'} onChange={this.onShowChoiceChange} />
                 <label htmlFor="issues-choice">Issues</label>
               </div>
+              <select value={this.state.monthStr} onChange={this.handleMonthChange} className="browser-default" id="month-select">
+                <option value="" selected="selected">Choose a month</option>
+                {monthOptions}
+              </select>
               <h2 className="commits-header">
                 Your {this.state.showWhat}
               </h2>
