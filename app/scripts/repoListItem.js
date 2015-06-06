@@ -2,30 +2,14 @@
 var React = require('react');
 var RepoListItem = React.createClass({
   getInitialState: function() {
-    return {checked: this.props.checked};
-  },
-  onSelected: function() {
-    this.props.onSelected(this.props.repo);
-  },
-  onDeselected: function() {
-    this.props.onDeselected(this.props.repo);
-  },
-  componentWillReceiveProps: function(nextProps) {
-    if (nextProps.checked !== this.state.checked) {
-      if (nextProps.checked) {
-        this.onSelected();
-      } else {
-        this.onDeselected();
-      }
-    }
-    this.setState({checked: nextProps.checked});
+    return {checked: false};
   },
   handleChange: function(event) {
     this.setState({checked: !this.state.checked});
     if (this.state.checked) {
-      this.onDeselected();
+      this.props.onDeselected(this.props.repo);
     } else {
-      this.onSelected();
+      this.props.onSelected(this.props.repo);
     }
   },
   render: function() {
@@ -44,8 +28,8 @@ var RepoListItem = React.createClass({
     var name = orgAndName[1];
     return (
       <li className="repo-list-item">
+        <input type="checkbox" checked={this.state.checked} id={checkboxId} onChange={this.handleChange} />
         <label className={labelClass} htmlFor={checkboxId}>
-          <input type="checkbox" checked={this.state.checked} id={checkboxId} onChange={this.handleChange} />
           <span className="octicon octicon-repo"></span>
           {name}
         </label>

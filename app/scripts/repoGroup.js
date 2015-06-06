@@ -3,18 +3,7 @@ var RepoListItem = require('./repoListItem'),
     React = require('react');
 var RepoGroup = React.createClass({
   getInitialState: function() {
-    return {checked: false, selectedRepos: []};
-  },
-  handleChange: function(event) {
-    this.setState({checked: !this.state.checked});
-    var newSelectedRepos;
-    if (this.state.checked) {
-      newSelectedRepos = [];
-    } else {
-      newSelectedRepos = this.props.repos.slice();
-    }
-    this.setState({selectedRepos: newSelectedRepos});
-    this.props.onReposChange(this.props.orgName, newSelectedRepos);
+    return {selectedRepos: []};
   },
   onRepoSelected: function(repo) {
     for (var i=0; i<this.state.selectedRepos.length; i++) {
@@ -52,23 +41,15 @@ var RepoGroup = React.createClass({
     for (var i=0; i<this.props.repos.length; i++) {
       var repo = this.props.repos[i];
       var key = this.props.index + '-' + i;
-      var listItem = <RepoListItem key={key} index={i} orgIndex={this.props.index} repo={repo} checked={this.state.checked} onSelected={this.onRepoSelected} onDeselected={this.onRepoDeselected} />;
+      var listItem = <RepoListItem key={key} index={i} orgIndex={this.props.index} repo={repo} onSelected={this.onRepoSelected} onDeselected={this.onRepoDeselected} />;
       listItems.push(listItem)
-    }
-    var checkboxId = 'org-' + this.props.index;
-    var labelClass = 'org-name ';
-    if (this.state.checked) {
-      labelClass += 'checked';
-    } else {
-      labelClass += 'unchecked';
     }
     return (
       <li className="org-list-item">
-        <label htmlFor={checkboxId} className={labelClass}>
-          <input type="checkbox" checked={this.state.checked} className="filled-in" id={checkboxId} onChange={this.handleChange} />
+        <span className="org-name">
           <span className="octicon octicon-organization"></span>
           {this.props.orgName}
-        </label>
+        </span>
         <ul className="org-repos-list">{listItems}</ul>
       </li>
     );
