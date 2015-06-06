@@ -37,6 +37,14 @@ main {
   padding: 0.2em 0;
 }
 
+.show-what-choice {
+  margin: 1.78rem 0 10px 0;
+
+  .commits-choice-label {
+    margin-right: 3rem;
+  }
+}
+
 .commits-by-week-list-item {
   .week {
     display: block;

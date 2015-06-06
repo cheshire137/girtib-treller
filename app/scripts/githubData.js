@@ -5,7 +5,7 @@ var ReposList = require('./reposList'),
     React = require('react');
 var GithubData = React.createClass({
   getInitialState: function() {
-    return {selectedRepos: [], user: {}};
+    return {selectedRepos: [], user: {}, showWhat: 'commits'};
   },
   onUserFetch: function(user) {
     this.setState({user: user});
@@ -14,7 +14,16 @@ var GithubData = React.createClass({
     console.log(selectedRepos.length, 'repos selected');
     this.setState({selectedRepos: selectedRepos});
   },
+  onShowChoiceChange: function(event) {
+    this.setState({showWhat: event.target.value});
+  },
   render: function() {
+    var listing;
+    if (this.state.showWhat === 'commits') {
+      listing = <CommitsList user={this.state.user} repos={this.state.selectedRepos} />;
+    } else {
+      listing = '';
+    }
     return (
       <div className="github-data">
         <nav className="blue darken-4">
@@ -37,8 +46,16 @@ var GithubData = React.createClass({
               <ReposList onReposChange={this.onReposChange} />
             </div>
             <div className="col s7 l8">
-              <h2 className="commits-header">Your Commits</h2>
-              <CommitsList user={this.state.user} repos={this.state.selectedRepos} />
+              <div className="show-what-choice">
+                <input type="radio" value="commits" name="showWhat" id="commits-choice" checked={this.state.showWhat === 'commits'} onChange={this.onShowChoiceChange} />
+                <label className="commits-choice-label" htmlFor="commits-choice">Commits</label>
+                <input type="radio" value="issues" name="showWhat" id="issues-choice" checked={this.state.showWhat === 'issues'} onChange={this.onShowChoiceChange} />
+                <label htmlFor="issues-choice">Issues</label>
+              </div>
+              <h2 className="commits-header">
+                Your {this.state.showWhat}
+              </h2>
+              {listing}
             </div>
           </div>
         </div>
