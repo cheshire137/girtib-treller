@@ -128,6 +128,11 @@ var Github = (function() {
         }
       }.bind(this)).promise();
     },
+    getUserIssues: function(sinceDate) {
+      var sinceStr = sinceDate.toISOString();
+      return this.getPaginatedJSON('/user/issues?filter=all&state=closed&since=' +
+                                   sinceStr);
+    },
     getOrgRepos: function(orgName) {
       return this.getPaginatedJSON('/orgs/' + orgName + '/repos');
     },
