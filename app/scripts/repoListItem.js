@@ -31,7 +31,7 @@ var RepoListItem = React.createClass({
       <li className="repo-list-item">
         <input type="checkbox" checked={this.state.checked} id={checkboxId} onChange={this.handleChange} />
         <label className={labelClass} htmlFor={checkboxId}>
-          <span className="repo-org-name">{orgName}/</span>
+          <span className="repo-org-name">{orgName}</span>
           <span className="octicon octicon-repo"></span>
           <span className="repo-name">{name}</span>
         </label>

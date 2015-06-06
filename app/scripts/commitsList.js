@@ -90,7 +90,6 @@ var CommitsList = React.createClass({
     var monthOptions = this.getMonthOptions();
     return (
       <div>
-        <label htmlFor="month-select">Month:</label>
         <select value={this.state.monthStr} onChange={this.handleChange} className="browser-default" id="month-select">
           <option value="" selected="selected">Choose a month</option>
           {monthOptions}
