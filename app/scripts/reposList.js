@@ -29,15 +29,9 @@ var ReposList = React.createClass({
   componentDidMount: function() {
     Github.getUserRepos().then(function(repos) {
       console.log(repos.length, 'repositories');
-      repos.sort(function(a, b) {
-        return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
-      });
       var orgNames = $.unique(repos.map(function(repo) {
         return repo.owner.login;
       }));
-      orgNames.sort(function(a, b) {
-        return a.toLowerCase().localeCompare(b.toLowerCase());
-      });
       var reposByOrg = {};
       for (var i=0; i<orgNames.length; i++) {
         reposByOrg[orgNames[i]] = [];

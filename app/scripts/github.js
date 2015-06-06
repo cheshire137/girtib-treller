@@ -46,11 +46,9 @@ var Github = (function() {
       return null;
     },
     getPaginatedJSON: function(path, extraHeaders) {
-      var perPageIndex = path.indexOf('per_page=');
-      if (perPageIndex < 0) {
+      if (path.indexOf('per_page=') < 0) {
         path += (path.indexOf('?') > -1 ? '&' : '?') + 'per_page=100';
       }
-      console.log(path);
       return $.Deferred(function(defer) {
         var results = [];
         var onSuccess = function(data, textStatus, request) {
@@ -58,11 +56,9 @@ var Github = (function() {
           var link = request.getResponseHeader('Link');
           var nextPageUrl = this.getNextPageUrl(link);
           if (nextPageUrl) {
-            console.log('next page', nextPageUrl);
             this.getJSON(nextPageUrl, extraHeaders).
                  success(onSuccess).error(defer.reject);
           } else {
-            console.log('fetched all pages');
             defer.resolve(results);
           }
         }.bind(this);
@@ -83,19 +79,21 @@ var Github = (function() {
           defer.resolve(orgNames);
         } else {
           orgNames = [];
-          this.getOrgs().success(function(orgs) {
+          var onSuccess = function(orgs) {
             for (var i=0; i<orgs.length; i++) {
               orgNames.push(orgs[i].login);
             }
             LocalStorage.set('orgNames', orgNames);
             defer.resolve(orgNames);
-          }).error(defer.reject);
+          };
+          this.getOrgs().then(onSuccess, defer.reject);
         }
       }.bind(this)).promise();
     },
     getUserRepos: function() {
       return this.getPaginatedJSON(
-        '/user/repos', {'Accept': 'application/vnd.github.moondragon+json'}
+        '/user/repos?sort=pushed',
+        {'Accept': 'application/vnd.github.moondragon+json'}
       );
     },
     getOrgRepos: function(orgName) {
@@ -121,14 +119,16 @@ var Github = (function() {
         var callback = function() { defer.resolve(allRepos); };
         orgNames.forEach(function(name) {
           statuses[name] = 'pending';
-          this.getOrgRepos(name).success(function(orgRepos) {
+          var onSuccess = function(orgRepos) {
             allRepos = allRepos.concat(orgRepos);
             statuses[name] = 'success'
             this.resolveIfNecessary(statuses, callback);
-          }.bind(this)).error(function() {
+          }.bind(this);
+          var onError = function() {
             statuses[name] = 'failure';
             this.resolveIfNecessary(statuses, callback);
-          }.bind(this));
+          }.bind(this);
+          this.getOrgRepos(name).then(onSuccess, onError);
         }.bind(this));
       }.bind(this)).promise();
     },
