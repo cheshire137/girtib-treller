@@ -8,10 +8,18 @@ var CommitsByWeek = React.createClass({
       var key = 'commit-' + commit.sha;
       return <CommitListItem key={key} commit={commit} />;
     });
+    var commitCount = this.props.commits.length;
+    var commitsLabel = 'commit';
+    if (commitCount !== 1) {
+      commitsLabel += 's';
+    }
     return (
       <li className="commits-by-week-list-item">
         <span className="week">
           {this.props.week}
+          <span className="badge">
+            {commitCount} {commitsLabel}
+          </span>
         </span>
         <ul className="commits-list">
           {commitListItems}
