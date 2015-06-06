@@ -27,7 +27,7 @@ var ReposList = React.createClass({
     this.props.onReposChange(singles);
   },
   componentDidMount: function() {
-    Github.getRepos().then(function(repos) {
+    Github.getUserRepos().then(function(repos) {
       console.log(repos.length, 'repositories');
       repos.sort(function(a, b) {
         return a.name.toLowerCase().localeCompare(b.name.toLowerCase());

@@ -4,23 +4,77 @@ var LocalStorage = require('./localStorage'),
 var Github = (function() {
   return {
     apiUrl: 'https://api.github.com',
-    getHeaders: function() {
+    getAuthHeaders: function() {
       return {
         'Authorization': 'token ' + LocalStorage.get('token')
       };
     },
-    getJSON: function(path) {
-      return $.ajax({
-        dataType: 'json',
-        url: this.apiUrl + path,
-        headers: this.getHeaders()
-      })
+    getJSON: function(path, extraHeaders) {
+      var headers;
+      if (typeof extraHeaders === 'undefined') {
+        headers = this.getAuthHeaders();
+      } else {
+        headers = $.extend(this.getAuthHeaders(), extraHeaders);
+      }
+      var url;
+      if (path.indexOf('http') === 0) {
+        url = path;
+      } else {
+        url = this.apiUrl + path;
+      }
+      return $.ajax({dataType: 'json', url: url, headers: headers});
+    },
+    getNextPageUrl: function(linkHeader) {
+      // e.g., <https://api.github.com/user/repos?per_page=100&page=2>; rel="next",
+      //       <https://api.github.com/user/repos?per_page=100&page=4>; rel="last"
+      if (!linkHeader) {
+        return null;
+      }
+      var segments = linkHeader.split(',');
+      for (var i=0; i<segments.length; i++) {
+        var segment = $.trim(segments[i]);
+        var bits = segment.split(';');
+        var rel = bits[1];
+        if (rel.indexOf('rel="next"') < 0) {
+          continue;
+        }
+        var url = bits[0];
+        var lessThanIndex = url.indexOf('<');
+        var greaterThanIndex = url.indexOf('>');
+        return url.slice(lessThanIndex + 1, greaterThanIndex);
+      }
+      return null;
+    },
+    getPaginatedJSON: function(path, extraHeaders) {
+      var perPageIndex = path.indexOf('per_page=');
+      if (perPageIndex < 0) {
+        path += (path.indexOf('?') > -1 ? '&' : '?') + 'per_page=100';
+      }
+      console.log(path);
+      return $.Deferred(function(defer) {
+        var results = [];
+        var onSuccess = function(data, textStatus, request) {
+          results = results.concat(data);
+          var link = request.getResponseHeader('Link');
+          var nextPageUrl = this.getNextPageUrl(link);
+          if (nextPageUrl) {
+            console.log('next page', nextPageUrl);
+            this.getJSON(nextPageUrl, extraHeaders).
+                 success(onSuccess).error(defer.reject);
+          } else {
+            console.log('fetched all pages');
+            defer.resolve(results);
+          }
+        }.bind(this);
+        this.getJSON(path, extraHeaders).
+             success(onSuccess).error(defer.reject);
+      }.bind(this)).promise();
     },
     getUser: function() {
       return this.getJSON('/user');
     },
     getOrgs: function() {
-      return this.getJSON('/user/orgs');
+      return this.getPaginatedJSON('/user/orgs');
     },
     getOrgNames: function() {
       return $.Deferred(function(defer) {
@@ -40,10 +94,12 @@ var Github = (function() {
       }.bind(this)).promise();
     },
     getUserRepos: function() {
-      return this.getJSON('/user/repos');
+      return this.getPaginatedJSON(
+        '/user/repos', {'Accept': 'application/vnd.github.moondragon+json'}
+      );
     },
     getOrgRepos: function(orgName) {
-      return this.getJSON('/orgs/' + orgName + '/repos');
+      return this.getPaginatedJSON('/orgs/' + orgName + '/repos');
     },
     resolveIfNecessary: function(statuses, callback) {
       var finished = true;
@@ -93,7 +149,7 @@ var Github = (function() {
       var url = '/repos/' + fullName + '/commits?author=' +
                 encodeURIComponent(author) + '&since=' + sinceStr +
                 '&until=' + untilStr;
-      return this.getJSON(url);
+      return this.getPaginatedJSON(url);
     },
     getCommitsFromRepos: function(repos, author, sinceDate, untilDate) {
       return $.Deferred(function(defer) {
@@ -106,18 +162,20 @@ var Github = (function() {
         }
         fullNames.forEach(function(fullName) {
           statuses[fullName] = 'pending';
+          var onSuccess = function(repoCommits) {
+            for (var i=0; i<repoCommits.length; i++) {
+              repoCommits[i].full_name = fullName;
+            }
+            allCommits = allCommits.concat(repoCommits);
+            statuses[fullName] = 'success';
+            this.resolveIfNecessary(statuses, callback);
+          }.bind(this);
+          var onError = function() {
+            statuses[fullName] = 'failure';
+            this.resolveIfNecessary(statuses, callback);
+          }.bind(this);
           this.getCommits(fullName, author, sinceDate, untilDate).
-               success(function(repoCommits) {
-                 for (var i=0; i<repoCommits.length; i++) {
-                   repoCommits[i].full_name = fullName;
-                 }
-                 allCommits = allCommits.concat(repoCommits);
-                 statuses[fullName] = 'success';
-                 this.resolveIfNecessary(statuses, callback);
-               }.bind(this)).error(function() {
-                 statuses[fullName] = 'failure';
-                 this.resolveIfNecessary(statuses, callback);
-               }.bind(this));
+               then(onSuccess, onError);
         }.bind(this));
       }.bind(this)).promise();
     }
