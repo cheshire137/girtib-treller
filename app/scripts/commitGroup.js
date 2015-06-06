@@ -28,7 +28,8 @@ var CommitGroup = React.createClass({
       return a.toLowerCase().localeCompare(b.toLowerCase());
     });
     var commitListItemsByRepo = repoFullNames.map(function(repoFullName) {
-      return <CommitsByRepo fullName={repoFullName} commits={commitsByRepo[repoFullName]} />;
+      var key = 'repo-' + repoFullName;
+      return <CommitsByRepo key={key} fullName={repoFullName} commits={commitsByRepo[repoFullName]} />;
     });
     return (
       <ul className="commits-by-repo-list">
