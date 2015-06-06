@@ -67,7 +67,22 @@ var Github = (function() {
       }.bind(this)).promise();
     },
     getUser: function() {
-      return this.getJSON('/user');
+      return $.Deferred(function(defer) {
+        var user = LocalStorage.get('user');
+        if (user) {
+          defer.resolve(user);
+        } else {
+          var onSuccess = function(data) {
+            user = {html_url: data.html_url,
+                    avatar_url: data.avatar_url,
+                    login: data.login,
+                    name: data.name};
+            LocalStorage.set('user', user);
+            defer.resolve(user);
+          }.bind(this);
+          this.getJSON('/user').then(onSuccess, defer.reject);
+        }
+      }.bind(this)).promise();
     },
     getOrgs: function() {
       return this.getPaginatedJSON('/user/orgs');
@@ -91,10 +106,27 @@ var Github = (function() {
       }.bind(this)).promise();
     },
     getUserRepos: function() {
-      return this.getPaginatedJSON(
-        '/user/repos?sort=pushed',
-        {'Accept': 'application/vnd.github.moondragon+json'}
-      );
+      return $.Deferred(function(defer) {
+        var repos = LocalStorage.get('repos');
+        if (repos) {
+          defer.resolve(repos);
+        } else {
+          var onSuccess = function(data) {
+            repos = data.map(function(repo) {
+              return {
+                full_name: repo.full_name,
+                private: repo.private
+              };
+            });
+            LocalStorage.set('repos', repos);
+            defer.resolve(repos);
+          }.bind(this);
+          this.getPaginatedJSON(
+            '/user/repos?sort=pushed',
+            {'Accept': 'application/vnd.github.moondragon+json'}
+          ).then(onSuccess, defer.reject);
+        }
+      }.bind(this)).promise();
     },
     getOrgRepos: function(orgName) {
       return this.getPaginatedJSON('/orgs/' + orgName + '/repos');

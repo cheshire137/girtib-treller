@@ -10,7 +10,8 @@ var ReposList = React.createClass({
     var otherGroupRepos = [];
     for (var i=0; i<this.state.selectedRepos.length; i++) {
       var repo = this.state.selectedRepos[i];
-      if (repo.owner.login !== orgName) {
+      var repoOrgName = repo.full_name.split('/')[0];
+      if (repoOrgName !== orgName) {
         otherGroupRepos.push(repo);
       }
     }
@@ -30,7 +31,7 @@ var ReposList = React.createClass({
     Github.getUserRepos().then(function(repos) {
       console.log(repos.length, 'repositories');
       var orgNames = $.unique(repos.map(function(repo) {
-        return repo.owner.login;
+        return repo.full_name.split('/')[0];
       }));
       var reposByOrg = {};
       for (var i=0; i<orgNames.length; i++) {
@@ -38,7 +39,8 @@ var ReposList = React.createClass({
       }
       for (var i=0; i<repos.length; i++) {
         var repo = repos[i];
-        reposByOrg[repo.owner.login].push(repo);
+        var orgName = repo.full_name.split('/')[0];
+        reposByOrg[orgName].push(repo);
       }
       this.setState({repos: reposByOrg});
     }.bind(this), function() {

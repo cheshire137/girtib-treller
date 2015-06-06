@@ -6,6 +6,9 @@ var Logout = React.createClass({
   mixins: [Router.Navigation],
   render: function() {
     LocalStorage.delete('token');
+    LocalStorage.delete('user');
+    LocalStorage.delete('orgNames');
+    LocalStorage.delete('repos');
     this.transitionTo('/');
     return <p></p>;
   }

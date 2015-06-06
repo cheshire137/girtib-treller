@@ -39,15 +39,18 @@ var RepoListItem = React.createClass({
     } else {
       labelClass += 'unchecked';
     }
+    var url = 'https://github.com/' + this.props.repo.full_name;
+    var orgAndName = this.props.repo.full_name.split('/');
+    var name = orgAndName[1];
     return (
       <li className="repo-list-item">
         <label className={labelClass} htmlFor={checkboxId}>
           <input type="checkbox" checked={this.state.checked} id={checkboxId} onChange={this.handleChange} />
           <span className="octicon octicon-repo"></span>
-          {this.props.repo.name}
+          {name}
         </label>
         {icon}
-        <a className="repo-link" href={this.props.repo.html_url} target="_blank">
+        <a className="repo-link" href={url} target="_blank">
           <i className="mdi-action-open-in-new"></i>
         </a>
       </li>
