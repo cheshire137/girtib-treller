@@ -1,59 +1,56 @@
 'use strict';
 var Github = require('./github'),
-    RepoGroup = require('./repoGroup'),
-    React = require('react');
+    React = require('react'),
+    RepoListItem = require('./repoListItem');
 var ReposList = React.createClass({
   getInitialState: function() {
-    return {repos: {}, selectedRepos: []};
+    return {repos: [], selectedRepos: []};
   },
-  onReposChange: function(orgName, selectedRepos) {
-    var otherGroupRepos = [];
+  onRepoSelected: function(repo) {
     for (var i=0; i<this.state.selectedRepos.length; i++) {
-      var repo = this.state.selectedRepos[i];
-      var repoOrgName = repo.full_name.split('/')[0];
-      if (repoOrgName !== orgName) {
-        otherGroupRepos.push(repo);
+      if (this.state.selectedRepos[i].full_name === repo.full_name) {
+        return;
       }
     }
-    var allSelectedRepos = otherGroupRepos.concat(selectedRepos);
-    var dupes = {};
-    var singles = [];
-    $.each(allSelectedRepos, function(i, repo) {
-      if (!dupes[repo.full_name]) {
-        dupes[repo.full_name] = true;
-        singles.push(repo);
+    console.log('enabling', repo.full_name);
+    var newSelectedRepos = this.state.selectedRepos.concat([repo]);
+    console.log('selected:', newSelectedRepos.map(function(r) { return r.full_name; }));
+    this.setState({selectedRepos: newSelectedRepos});
+    this.props.onReposChange(newSelectedRepos);
+  },
+  onRepoDeselected: function(repo) {
+    var index = -1;
+    for (var i=0; i<this.state.selectedRepos.length; i++) {
+      if (this.state.selectedRepos[i].full_name === repo.full_name) {
+        index = i;
+        break;
       }
-    });
-    this.setState({selectedRepos: singles});
-    this.props.onReposChange(singles);
+    }
+    if (index < 0) {
+      return;
+    }
+    console.log('disabling', repo.full_name);
+    var newSelectedRepos = this.state.selectedRepos.slice(0, index).
+        concat(this.state.selectedRepos.slice(index + 1,
+                                              this.state.selectedRepos.length));
+    console.log('selected:', newSelectedRepos.map(function(r) { return r.full_name; }));
+    this.setState({selectedRepos: newSelectedRepos});
+    this.props.onReposChange(newSelectedRepos);
   },
   componentDidMount: function() {
     Github.getUserRepos().then(function(repos) {
       console.log(repos.length, 'repositories');
-      var orgNames = $.unique(repos.map(function(repo) {
-        return repo.full_name.split('/')[0];
-      }));
-      var reposByOrg = {};
-      for (var i=0; i<orgNames.length; i++) {
-        reposByOrg[orgNames[i]] = [];
-      }
-      for (var i=0; i<repos.length; i++) {
-        var repo = repos[i];
-        var orgName = repo.full_name.split('/')[0];
-        reposByOrg[orgName].push(repo);
-      }
-      this.setState({repos: reposByOrg});
+      this.setState({repos: repos});
     }.bind(this), function() {
       console.error('failed to fetch all repositories');
     });
   },
   render: function() {
     var listItems = [];
-    var index = 0;
-    for (var orgName in this.state.repos) {
-      var key = 'org-' + index;
-      listItems.push(<RepoGroup key={key} index={index} orgName={orgName} repos={this.state.repos[orgName]} onReposChange={this.onReposChange} />);
-      index++;
+    for (var i=0; i<this.state.repos.length; i++) {
+      var repo = this.state.repos[i];
+      var key = 'repo-' + i;
+      listItems.push(<RepoListItem key={key} index={i} repo={repo} onSelected={this.onRepoSelected} onDeselected={this.onRepoDeselected} />);
     }
     return (
       <ul className="repos-list">

@@ -25,13 +25,15 @@ var RepoListItem = React.createClass({
     }
     var url = 'https://github.com/' + this.props.repo.full_name;
     var orgAndName = this.props.repo.full_name.split('/');
+    var orgName = orgAndName[0];
     var name = orgAndName[1];
     return (
       <li className="repo-list-item">
         <input type="checkbox" checked={this.state.checked} id={checkboxId} onChange={this.handleChange} />
         <label className={labelClass} htmlFor={checkboxId}>
+          <span className="repo-org-name">{orgName}/</span>
           <span className="octicon octicon-repo"></span>
-          {name}
+          <span className="repo-name">{name}</span>
         </label>
         {icon}
         <a className="repo-link" href={url} target="_blank">
