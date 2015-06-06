@@ -7,6 +7,15 @@ $octicons-font-path: "../fonts/";
 
 $avatar-height: 30px;
 $opacity-transition: opacity 0.25s ease-in-out;
+$color-transition: color 0.25s ease-in-out;
+
+a {
+  -webkit-transition: $color-transition;
+  -moz-transition: $color-transition;
+  -ms-transition: $color-transition;
+  -o-transition: $color-transition;
+  transition: $color-transition;
+}
 
 body {
   background: #fafafa;
@@ -94,6 +103,10 @@ main {
 }
 
 .commits-by-repo-list {
+  a:hover, a:focus {
+    color: #283593;
+  }
+
   .commits-by-repo-list-item {
     .repo-full-name {
       display: block;
