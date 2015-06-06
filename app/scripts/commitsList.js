@@ -6,7 +6,10 @@ var moment = require('moment'),
 var CommitsList = React.createClass({
   getInitialState: function() {
     var curDate = new Date();
-    var curMonth = curDate.getMonth() + 1;
+    var curMonth = curDate.getMonth();
+    if (curDate.getDate() >= 15) {
+      curMonth = curDate.getMonth() + 1;
+    }
     if (curMonth < 10) {
       curMonth = '0' + curMonth;
     }
