@@ -14,12 +14,9 @@ var CommitsByRepo = React.createClass({
       var weekStartMonth = weekStart.toDate().getMonth();
       var includeCommit = true;
       if (weekEndMonth > weekStartMonth) {
-        includeCommit = false;
         if (curMonth < weekEndMonth) {
-          console.log('week ends in next month', dateStr);
           weekEnd = moment(dateStr).endOf('month');
-        } else {
-          console.log('week begins in previous month', dateStr);
+        } else if (weekStartMonth < curMonth) {
           weekStart = moment(dateStr).startOf('month');
         }
       }
@@ -29,9 +26,7 @@ var CommitsByRepo = React.createClass({
       if (typeof commitsByWeek[week] === 'undefined') {
         commitsByWeek[week] = [];
       }
-      if (includeCommit) {
-        commitsByWeek[week].push(commit);
-      }
+      commitsByWeek[week].push(commit);
       return week;
     }.bind(this)));
     weeks.sort(function(a, b) {
