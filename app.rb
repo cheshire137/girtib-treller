@@ -13,7 +13,7 @@ else
   set :public_folder, 'app'
 end
 
-use Rack::Static, urls: ['/styles', '/scripts', '/images',
+use Rack::Static, urls: ['/styles', '/scripts/**/*.js', '/images',
                          '/bower_components'], root: settings.public_folder
 
 # For Heroku
