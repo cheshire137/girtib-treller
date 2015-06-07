@@ -53,6 +53,14 @@ main {
     background-color: #EFEFEF;
     margin-bottom: 10px;
     position: relative;
+
+    .week-issue-count {
+      .issue-count {
+        &:after {
+          content: "\a0\2044\a0";
+        }
+      }
+    }
   }
 
   & + .commits-by-week-list-item,
@@ -128,6 +136,14 @@ main {
 
       .octicon {
         margin-right: 5px;
+      }
+
+      .repo-issue-count {
+        .issue-count {
+          &:after {
+            content: "\a0\2044\a0";
+          }
+        }
       }
     }
 
@@ -283,12 +299,14 @@ main {
         }
       }
 
-      .issue-labels-list {
+      .separator {
+        margin-right: 0.3em;
         display: inline-block;
+      }
 
-        &:before, &:after {
-          content: "\b7\a0";
-        }
+      .issue-labels-list {
+        margin-right: 0.3em;
+        display: inline-block;
 
         .label-list-item {
           display: inline-block;
@@ -306,7 +324,6 @@ main {
       }
 
       time.issue-date {
-        margin-left: 0.3em;
         display: inline-block;
       }
     }

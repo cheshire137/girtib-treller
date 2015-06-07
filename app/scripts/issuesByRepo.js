@@ -5,7 +5,13 @@ var React = require('react'),
 var IssuesByRepo = React.createClass({
   render: function() {
     var issuesByWeek = {};
+    var issueCount = 0, prCount = 0;
     var weeks = $.unique(this.props.issues.map(function(issue) {
+      if (issue.pull_request) {
+        prCount++;
+      } else {
+        issueCount++;
+      }
       var dateStr = issue.closed_at;
       var weekStart = moment(dateStr).startOf('week');
       var weekEnd = moment(dateStr).endOf('week');
@@ -39,10 +45,13 @@ var IssuesByRepo = React.createClass({
       var key = 'issue-week-' + week;
       return <IssuesByWeek key={key} issues={issuesByWeek[week]} week={week} />;
     });
-    var issueCount = this.props.issues.length;
     var issueCountLabel = 'issue';
     if (issueCount !== 1) {
       issueCountLabel += 's';
+    }
+    var prCountLabel = 'pull request';
+    if (prCount !== 1) {
+      prCountLabel += 's';
     }
     return (
       <li className="issues-by-repo-list-item">
@@ -50,7 +59,8 @@ var IssuesByRepo = React.createClass({
           <span className="octicon octicon-repo"></span>
           {this.props.fullName}
           <span className="badge repo-issue-count">
-            {issueCount} {issueCountLabel}
+            <span className="issue-count">{issueCount} {issueCountLabel}</span>
+            <span className="pr-count">{prCount} {prCountLabel}</span>
           </span>
         </span>
         <ul className="issues-by-week-list">

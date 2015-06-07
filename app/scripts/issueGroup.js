@@ -22,7 +22,6 @@ var IssueGroup = React.createClass({
     var repoFullNames = $.unique(this.props.issues.map(function(issue) {
       var fullName = issue.html_url.split('https://github.com/')[1].
                                     split('/issues')[0].split('/pull')[0];
-      console.log('issue repo', fullName);
       if (typeof issuesByRepo[fullName] === 'undefined') {
         issuesByRepo[fullName] = [];
       }

@@ -30,9 +30,11 @@ var IssueListItem = React.createClass({
             <img src={this.props.issue.user.avatar_url} alt={this.props.issue.user.login} className="issue-user-avatar" />
             <span className="issue-user-name">{this.props.issue.user.login}</span>
           </a>
+          <span className="separator">&middot;</span>
           <ul className="issue-labels-list" style={labelsListStyle}>
             {labelListItems}
           </ul>
+          <span className="separator" style={labelsListStyle}>&middot;</span>
           <time className="issue-date">
             {timestamp}
           </time>
