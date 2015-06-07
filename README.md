@@ -6,7 +6,7 @@
 
 [Register a Github application](https://github.com/settings/applications/new).
 For local development, set its 'Authorization callback URL' to
-`http://localhost:9292/auth/github/callback` For deployment, its callback URL
+`http://localhost:5000/auth/github/callback` For deployment, its callback URL
 will be whatever your host is plus `/auth/github/callback`
 
     cp env.sh.example env.sh
