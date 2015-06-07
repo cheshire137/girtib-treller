@@ -22,6 +22,8 @@ Visit [localhost:3001](http://localhost:3001/) in your browser.
 
 ## How to Deploy to Heroku
 
+### First Time
+
 1. [Create a new app on Heroku](https://dashboard.heroku.com/apps).
 1. `git remote add heroku git@heroku.com:yourherokuapp.git`
 1. `heroku config:add BUILDPACK_URL=https://github.com/heroku/heroku-buildpack-ruby.git`
@@ -32,5 +34,9 @@ Visit [localhost:3001](http://localhost:3001/) in your browser.
 1. `heroku config:set FRONT_END_URL=url_to_your_heroku_app`
 1. `git push heroku master`
 1. `heroku ps:scale web=1`
+
+### After It Has Been Deployed Once
+
+    ./deploy.sh
 
 ![Ermagerd](https://raw.githubusercontent.com/moneypenny/girtib-treller/master/ermagerd.jpg)
