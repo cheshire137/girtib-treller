@@ -7,6 +7,7 @@ require 'logger'
 
 enable :sessions, :logging
 set :session_secret, ENV['SESSION_KEY']
+set :protection, except: [:json_csrf]
 
 before do
   logger.level = Logger::DEBUG
