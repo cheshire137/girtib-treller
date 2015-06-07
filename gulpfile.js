@@ -174,7 +174,7 @@ gulp.task('watch', ['html', 'fonts', 'bundle'], function() {
 gulp.task('build', ['html', 'buildBundle', 'images', 'fonts', 'extras'], function() {
   gulp.src('dist/scripts/app.js')
       .pipe($.uglify())
-      .pipe($.stripDebug())
+      // .pipe($.stripDebug())
       .pipe(gulp.dest('dist/scripts'));
 });
 

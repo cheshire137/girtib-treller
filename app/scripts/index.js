@@ -3,7 +3,6 @@ var Router = require('react-router'),
     Config = require('./config.json'),
     LocalStorage = require('./localStorage'),
     React = require('react');
-console.log('config', Config);
 var Index = React.createClass({
   mixins: [Router.Navigation],
   componentWillMount: function() {
@@ -13,6 +12,7 @@ var Index = React.createClass({
     }
   },
   getInitialState: function() {
+    console.log('config', Config);
     return {
       authUrl: Config.apiUrl + '/auth/github'
     };
