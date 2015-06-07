@@ -38,9 +38,13 @@ var routes = (
 );
 
 Router.run(routes, function(Handler) {
-  $.get('scripts/config.json', function(Config) {
-    window.Config = Config;
-    console.log('loaded config', window.Config);
+  if (window.Config) {
     React.render(<Handler/>, mountNode);
-  });
+  } else {
+    $.get('scripts/config.json', function(Config) {
+      window.Config = Config;
+      console.log('loaded config', window.Config);
+      React.render(<Handler/>, mountNode);
+    });
+  }
 });
