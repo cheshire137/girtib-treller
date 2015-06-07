@@ -1,12 +1,12 @@
 'use strict';
 var React = require('react'),
     moment = require('moment'),
-    CommitsByWeek = require('./commitsByWeek');
-var CommitsByRepo = React.createClass({
+    IssuesByWeek = require('./issuesByWeek');
+var IssuesByRepo = React.createClass({
   render: function() {
-    var commitsByWeek = {};
-    var weeks = $.unique(this.props.commits.map(function(commit) {
-      var dateStr = commit.commit.committer.date;
+    var issuesByWeek = {};
+    var weeks = $.unique(this.props.issues.map(function(issue) {
+      var dateStr = issue.closed_at;
       var weekStart = moment(dateStr).startOf('week');
       var weekEnd = moment(dateStr).endOf('week');
       var curMonth = moment(dateStr).toDate().getMonth();
@@ -22,10 +22,10 @@ var CommitsByRepo = React.createClass({
       var weekStartStr = weekStart.format('M/D/YYYY');
       var weekEndStr = weekEnd.format('M/D/YYYY');
       var week = weekStartStr + ' - ' + weekEndStr;
-      if (typeof commitsByWeek[week] === 'undefined') {
-        commitsByWeek[week] = [];
+      if (typeof issuesByWeek[week] === 'undefined') {
+        issuesByWeek[week] = [];
       }
-      commitsByWeek[week].push(commit);
+      issuesByWeek[week].push(issue);
       return week;
     }.bind(this)));
     weeks.sort(function(a, b) {
@@ -35,29 +35,29 @@ var CommitsByRepo = React.createClass({
       var bDate = moment(bWeekStart, 'M/D/YYYY').toDate();
       return aDate - bDate;
     });
-    var commitListItemsByWeek = weeks.map(function(week) {
-      var key = 'week-' + week;
-      return <CommitsByWeek key={key} commits={commitsByWeek[week]} week={week} />;
+    var issueListItemsByWeek = weeks.map(function(week) {
+      var key = 'issue-week-' + week;
+      return <IssuesByWeek key={key} issues={issuesByWeek[week]} week={week} />;
     });
-    var commitCount = this.props.commits.length;
-    var commitCountLabel = 'commit';
-    if (commitCount !== 1) {
-      commitCountLabel += 's';
+    var issueCount = this.props.issues.length;
+    var issueCountLabel = 'issue';
+    if (issueCount !== 1) {
+      issueCountLabel += 's';
     }
     return (
-      <li className="commits-by-repo-list-item">
+      <li className="issues-by-repo-list-item">
         <span className="repo-full-name">
           <span className="octicon octicon-repo"></span>
           {this.props.fullName}
-          <span className="badge repo-commit-count">
-            {commitCount} {commitCountLabel}
+          <span className="badge repo-issue-count">
+            {issueCount} {issueCountLabel}
           </span>
         </span>
-        <ul className="commits-by-week-list">
-          {commitListItemsByWeek}
+        <ul className="issues-by-week-list">
+          {issueListItemsByWeek}
         </ul>
       </li>
     );
   }
 });
-module.exports = CommitsByRepo;
+module.exports = IssuesByRepo;

@@ -45,7 +45,8 @@ main {
   }
 }
 
-.commits-by-week-list-item {
+.commits-by-week-list-item,
+.issues-by-week-list-item {
   .week {
     display: block;
     padding: 3px 17px;
@@ -54,7 +55,8 @@ main {
     position: relative;
   }
 
-  & + .commits-by-week-list-item {
+  & + .commits-by-week-list-item,
+  & + .issues-by-week-list-item {
     margin-top: 20px;
   }
 }
@@ -111,12 +113,14 @@ main {
   }
 }
 
-.commits-by-repo-list {
+.commits-by-repo-list,
+.issues-by-repo-list {
   a:hover, a:focus {
     color: #283593;
   }
 
-  .commits-by-repo-list-item {
+  .commits-by-repo-list-item,
+  .issues-by-repo-list-item {
     .repo-full-name {
       display: block;
       margin-bottom: 10px;
@@ -127,7 +131,8 @@ main {
       }
     }
 
-    & + .commits-by-repo-list-item {
+    & + .commits-by-repo-list-item,
+    & + .issues-by-repo-list-item {
       margin-top: 40px;
     }
   }
@@ -245,6 +250,7 @@ main {
   .issue-list-item {
     .octicon {
       margin-right: 5px;
+      width: 16px;
     }
 
     & + .issue-list-item {
@@ -260,7 +266,7 @@ main {
 
     .issue-metadata {
       font-size: 0.9rem;
-      margin-left: 17px;
+      margin-left: 21px;
       color: #777;
 
       .issue-user-link {

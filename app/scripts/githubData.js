@@ -60,7 +60,7 @@ var GithubData = React.createClass({
       headerText = 'Your Commits';
       listing = <CommitsList monthStr={this.state.monthStr} user={this.state.user} repos={this.state.selectedRepos} />;
     } else {
-      headerText = 'Issues';
+      headerText = 'Closed Issues';
       listing = <IssuesList monthStr={this.state.monthStr} repos={this.state.selectedRepos} />;
     }
     var monthOptions = this.getMonthOptions();

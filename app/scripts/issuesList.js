@@ -1,12 +1,13 @@
 'use strict';
 var moment = require('moment'),
     React = require('react'),
-    Github = require('./github');
+    Github = require('./github'),
+    IssueGroup = require('./issueGroup');
 var IssuesList = React.createClass({
   getInitialState: function() {
     return {issues: []};
   },
-  filterIssues: function(allIssues, year, month) {
+  filterIssues: function(allIssues, year, month, sinceDate) {
     var lastDayStr = moment(this.props.monthStr + '-01', 'YYYY-MM-DD').
         endOf('month').format('D');
     var lastDay = parseInt(lastDayStr, 10);
@@ -14,10 +15,8 @@ var IssuesList = React.createClass({
     var issues = [];
     allIssues.forEach(function(issue) {
       var closedDate = moment(issue.closed_at).toDate();
-      if (closedDate < untilDate) {
+      if (closedDate <= untilDate && closedDate >= sinceDate) {
         issues.push(issue);
-      } else {
-        console.log(issue.closed_at, 'after cutoff date', untilDate);
       }
     });
     console.log('after filtering issues, have', issues.length);
@@ -39,7 +38,7 @@ var IssuesList = React.createClass({
     Github.getAllRepoIssues(fullNames, sinceDate).
            then(function(issues) {
              console.log('got', issues.length, 'issues');
-             this.filterIssues(issues, year, month);
+             this.filterIssues(issues, year, month, sinceDate);
            }.bind(this), function() {
              console.error('failed to fetch issues');
            });
@@ -63,54 +62,7 @@ var IssuesList = React.createClass({
     this.fetchIssues();
   },
   render: function() {
-    var listItems = this.state.issues.map(function(issue) {
-      var icon = issue.pull_request ? (
-        <span className="octicon octicon-git-pull-request"></span>
-      ) : (
-        <span className="octicon octicon-issue-closed"></span>
-      );
-      var date = issue.closed_at;
-      var timestamp = moment(date).format('ddd D MMM');
-      var labelListItems = issue.labels.map(function(label) {
-        var style = {backgroundColor: '#' + label.color};
-        return (
-          <li className="label-list-item">
-            <span className="label-name" style={style}>
-              {label.name}
-            </span>
-          </li>
-        );
-      });
-      var labelsListStyle = {
-        display: labelListItems.length > 0 ? 'inline-block' : 'none'
-      };
-      return (
-        <li className="issue-list-item">
-          {icon}
-          <a className="issue-link" href={issue.html_url}>
-            <span className="issue-number">#{issue.number}</span>
-            <span className="issue-title">{issue.title}</span>
-          </a>
-          <div className="issue-metadata">
-            <a className="issue-user-link" href={issue.user.html_url}>
-              <img src={issue.user.avatar_url} alt={issue.user.login} className="issue-user-avatar" />
-              <span className="issue-user-name">{issue.user.login}</span>
-            </a>
-            <ul className="issue-labels-list" style={labelsListStyle}>
-              {labelListItems}
-            </ul>
-            <time className="issue-date">
-              {timestamp}
-            </time>
-          </div>
-        </li>
-      );
-    });
-    return (
-      <ul className="issues-list">
-        {listItems}
-      </ul>
-    );
+    return <IssueGroup repos={this.props.repos} issues={this.state.issues} monthStr={this.props.monthStr} />;
   }
 });
 module.exports = IssuesList;
