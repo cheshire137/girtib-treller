@@ -1,5 +1,7 @@
 # girtib-treller
 
+![Screenshot](https://raw.githubusercontent.com/moneypenny/girtib-treller/master/screenshot1.png)
+
 ## How to Run Locally
 
 [Register a Github application](https://github.com/settings/applications/new).
