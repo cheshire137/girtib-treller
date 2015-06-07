@@ -3,9 +3,14 @@ require 'sinatra'
 require 'json'
 require 'securerandom'
 require 'net/http'
+require 'logger'
 
 enable :sessions, :logging
 set :session_secret, ENV['SESSION_KEY']
+
+before do
+  logger.level = Logger::DEBUG
+end
 
 if ENV['RACK_ENV'] == 'production'
   set :public_folder, 'dist'
@@ -33,12 +38,11 @@ get '/auth/github' do
   session[:state] = SecureRandom.hex
   scopes = 'repo'
   if ENV['RACK_ENV'] == 'production'
-    scheme = 'https'
+    redirect_url = ENV['FRONT_END_URL']
   else
-    scheme = 'http'
+    redirect_url = "#{request.scheme}://#{request.host}"
+    redirect_url += ":#{request.port}" unless request.port == 80
   end
-  redirect_url = "#{scheme}://#{request.host}"
-  redirect_url += ":#{request.port}" unless request.port == 80
   redirect_url += '/auth/github/callback'
   github_url = 'https://github.com/login/oauth/authorize?client_id=' +
                ENV['GITHUB_CLIENT_ID'] + '&redirect_uri=' + redirect_url +
@@ -49,8 +53,7 @@ end
 get '/auth/github/callback' do
   content_type :json
   code = params[:code]
-  state = params[:state]
-  unless state == session[:state]
+  unless params[:state] == session[:state]
     status 424 # failed dependency
     return {error: 'Invalid state, could not authenticate with Github.'}.to_json
   end
