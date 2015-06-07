@@ -31,8 +31,8 @@ var CommitsByWeek = React.createClass({
         <span className="week">
           <a className="toggle-list-visibility" href="#" onClick={this.toggleExpanded}>
             {expandIcon}
+            {this.props.week}
           </a>
-          {this.props.week}
           <span className="badge">
             {commitCount} {commitsLabel}
           </span>

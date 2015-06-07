@@ -7,7 +7,7 @@ $octicons-font-path: "../fonts/";
 
 $avatar-height: 30px;
 $opacity-transition: opacity 0.25s ease-in-out;
-$color-transition: color 0.25s ease-in-out;
+$color-transition: color 0.2s ease-in-out;
 
 a {
   -webkit-transition: $color-transition;
@@ -69,12 +69,6 @@ main {
   }
 }
 
-.toggle-list-visibility {
-  display: inline-block;
-  color: inherit;
-  margin-right: 0.3em;
-}
-
 .page-footer {
   ul {
     margin-top: 0;
@@ -131,6 +125,18 @@ main {
 .issues-by-repo-list {
   a:hover, a:focus {
     color: #283593;
+  }
+
+  a.toggle-list-visibility {
+    &, &:hover, &:focus, &:active {
+      color: rgb(51, 51, 51);
+    }
+
+    .mdi-hardware-keyboard-arrow-down,
+    .mdi-hardware-keyboard-arrow-right {
+      display: inline-block;
+      margin-right: 0.3em;
+    }
   }
 
   .commits-by-repo-list-item,

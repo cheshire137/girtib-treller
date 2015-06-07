@@ -40,8 +40,8 @@ var IssuesByWeek = React.createClass({
         <span className="week">
           <a className="toggle-list-visibility" href="#" onClick={this.toggleExpanded}>
             {expandIcon}
+            {this.props.week}
           </a>
-          {this.props.week}
           <span className="badge week-issue-count">
             <span className="issue-count">{issueCount} {issueCountLabel}</span>
             <span className="pr-count">{prCount} {prCountLabel}</span>

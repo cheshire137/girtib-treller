@@ -71,9 +71,9 @@ var IssuesByRepo = React.createClass({
         <span className="repo-full-name">
           <a className="toggle-list-visibility" href="#" onClick={this.toggleExpanded}>
             {expandIcon}
+            <span className="octicon octicon-repo"></span>
+            {this.props.fullName}
           </a>
-          <span className="octicon octicon-repo"></span>
-          {this.props.fullName}
           <span className="badge repo-issue-count">
             <span className="issue-count">{issueCount} {issueCountLabel}</span>
             <span className="pr-count">{prCount} {prCountLabel}</span>
