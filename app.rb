@@ -22,7 +22,7 @@ get '/' do
 end
 
 # For Heroku where the API URL and front end URL are the same
-get '/config.json' do
+get '/scripts/config.json' do
   content_type 'application/json'
   {localStorageKey: 'girtib-treller', apiUrl: ENV['FRONT_END_URL']}.to_json
 end
