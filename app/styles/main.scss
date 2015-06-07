@@ -241,6 +241,72 @@ main {
   }
 }
 
+.issues-list {
+  .issue-list-item {
+    .octicon {
+      margin-right: 5px;
+    }
+
+    & + .issue-list-item {
+      margin-top: 10px;
+    }
+
+    .issue-link {
+      .issue-title {
+        display: inline-block;
+        margin: 0 0.3em;
+      }
+    }
+
+    .issue-metadata {
+      font-size: 0.9rem;
+      margin-left: 17px;
+      color: #777;
+
+      .issue-user-link {
+        display: inline-block;
+        margin-right: 0.3em;
+        color: #777;
+
+        .issue-user-avatar {
+          border-radius: 100%;
+          height: 16px;
+          display: inline-block;
+          vertical-align: middle;
+          margin-right: 0.3em;
+        }
+      }
+
+      .issue-labels-list {
+        display: inline-block;
+
+        &:before, &:after {
+          content: "\b7\a0";
+        }
+
+        .label-list-item {
+          display: inline-block;
+
+          .label-name {
+            display: inline-block;
+            padding: 0 0.4em;
+            border-radius: 2px;
+          }
+
+          & + .label-list-item {
+            margin-left: 0.3em;
+          }
+        }
+      }
+
+      time.issue-date {
+        margin-left: 0.3em;
+        display: inline-block;
+      }
+    }
+  }
+}
+
 .clearfix:after {
   visibility: hidden;
   display: block;

@@ -3,6 +3,7 @@ var ReposList = require('./reposList'),
     UserDetails = require('./userDetails'),
     moment = require('moment'),
     CommitsList = require('./commitsList'),
+    IssuesList = require('./issuesList'),
     React = require('react');
 var GithubData = React.createClass({
   getInitialState: function() {
@@ -54,10 +55,13 @@ var GithubData = React.createClass({
   },
   render: function() {
     var listing;
+    var headerText;
     if (this.state.showWhat === 'commits') {
+      headerText = 'Your Commits';
       listing = <CommitsList monthStr={this.state.monthStr} user={this.state.user} repos={this.state.selectedRepos} />;
     } else {
-      listing = '';
+      headerText = 'Issues';
+      listing = <IssuesList monthStr={this.state.monthStr} repos={this.state.selectedRepos} />;
     }
     var monthOptions = this.getMonthOptions();
     return (
@@ -93,7 +97,7 @@ var GithubData = React.createClass({
                 {monthOptions}
               </select>
               <h2 className="commits-header">
-                Your {this.state.showWhat}
+                {headerText}
               </h2>
               {listing}
             </div>

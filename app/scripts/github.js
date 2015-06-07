@@ -133,6 +133,31 @@ var Github = (function() {
       return this.getPaginatedJSON('/user/issues?filter=all&state=closed&since=' +
                                    sinceStr);
     },
+    getRepoIssues: function(fullName, sinceDate) {
+      var sinceStr = sinceDate.toISOString();
+      return this.getPaginatedJSON('/repos/' + fullName + '/issues?state=closed' +
+                                   '&since=' + sinceStr + '&sort=updated');
+    },
+    getAllRepoIssues: function(fullNames, sinceDate) {
+      return $.Deferred(function(defer) {
+        var statuses = {};
+        var allIssues = [];
+        var callback = function() { defer.resolve(allIssues); };
+        fullNames.forEach(function(fullName) {
+          statuses[fullName] = 'pending';
+          var onSuccess = function(repoIssues) {
+            allIssues = allIssues.concat(repoIssues);
+            statuses[fullName] = 'success'
+            this.resolveIfNecessary(statuses, callback);
+          }.bind(this);
+          var onError = function() {
+            statuses[fullName] = 'failure';
+            this.resolveIfNecessary(statuses, callback);
+          }.bind(this);
+          this.getRepoIssues(fullName, sinceDate).then(onSuccess, onError);
+        }.bind(this));
+      }.bind(this)).promise();
+    },
     getOrgRepos: function(orgName) {
       return this.getPaginatedJSON('/orgs/' + orgName + '/repos');
     },
