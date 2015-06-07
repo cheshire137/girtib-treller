@@ -24,8 +24,7 @@ Visit [localhost:3001](http://localhost:3001/) in your browser.
 
 1. [Create a new app on Heroku](https://dashboard.heroku.com/apps).
 1. `git remote add heroku git@heroku.com:yourherokuapp.git`
-1. `heroku config:add BUILDPACK_URL=https://github.com/ddollar/heroku-buildpack-multi.git`
-1. `heroku config:set NODE_ENV=production`
+1. `heroku config:add BUILDPACK_URL=https://github.com/heroku/heroku-buildpack-ruby.git`
 1. `heroku config:set RACK_ENV=production`
 1. `heroku config:set GITHUB_CLIENT_ID=your_github_app_client_id`
 1. `heroku config:set GITHUB_CLIENT_SECRET=your_github_app_client_secret`

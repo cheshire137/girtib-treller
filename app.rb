@@ -16,10 +16,12 @@ end
 use Rack::Static, urls: ['/styles', '/scripts', '/images',
                          '/bower_components'], root: settings.public_folder
 
+# For Heroku
 get '/' do
   send_file File.join(settings.public_folder, 'index.html')
 end
 
+# For Heroku where the API URL and front end URL are the same
 get '/config.json' do
   content_type 'application/json'
   {localStorageKey: 'girtib-treller', apiUrl: ENV['FRONT_END_URL']}.to_json
