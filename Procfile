@@ -1,2 +1,1 @@
-api: rackup
-ui: gulp watch
+rack: rackup -s puma -p $PORT
