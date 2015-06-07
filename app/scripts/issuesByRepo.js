@@ -3,6 +3,13 @@ var React = require('react'),
     moment = require('moment'),
     IssuesByWeek = require('./issuesByWeek');
 var IssuesByRepo = React.createClass({
+  getInitialState: function() {
+    return {expanded: true};
+  },
+  toggleExpanded: function(event) {
+    event.preventDefault();
+    this.setState({expanded: !this.state.expanded});
+  },
   render: function() {
     var issuesByWeek = {};
     var issueCount = 0, prCount = 0;
@@ -53,9 +60,18 @@ var IssuesByRepo = React.createClass({
     if (prCount !== 1) {
       prCountLabel += 's';
     }
+    var listStyle = {display: this.state.expanded ? 'block' : 'none'};
+    var expandIcon = this.state.expanded ? (
+      <span className="mdi-hardware-keyboard-arrow-down"></span>
+    ) : (
+      <span className="mdi-hardware-keyboard-arrow-right"></span>
+    );
     return (
       <li className="issues-by-repo-list-item">
         <span className="repo-full-name">
+          <a className="toggle-list-visibility" href="#" onClick={this.toggleExpanded}>
+            {expandIcon}
+          </a>
           <span className="octicon octicon-repo"></span>
           {this.props.fullName}
           <span className="badge repo-issue-count">
@@ -63,7 +79,7 @@ var IssuesByRepo = React.createClass({
             <span className="pr-count">{prCount} {prCountLabel}</span>
           </span>
         </span>
-        <ul className="issues-by-week-list">
+        <ul className="issues-by-week-list" style={listStyle}>
           {issueListItemsByWeek}
         </ul>
       </li>

@@ -3,6 +3,13 @@ var React = require('react'),
     moment = require('moment'),
     CommitsByWeek = require('./commitsByWeek');
 var CommitsByRepo = React.createClass({
+  getInitialState: function() {
+    return {expanded: true};
+  },
+  toggleExpanded: function(event) {
+    event.preventDefault();
+    this.setState({expanded: !this.state.expanded});
+  },
   render: function() {
     var commitsByWeek = {};
     var weeks = $.unique(this.props.commits.map(function(commit) {
@@ -44,16 +51,25 @@ var CommitsByRepo = React.createClass({
     if (commitCount !== 1) {
       commitCountLabel += 's';
     }
+    var listStyle = {display: this.state.expanded ? 'block' : 'none'};
+    var expandIcon = this.state.expanded ? (
+      <span className="mdi-hardware-keyboard-arrow-down"></span>
+    ) : (
+      <span className="mdi-hardware-keyboard-arrow-right"></span>
+    );
     return (
       <li className="commits-by-repo-list-item">
         <span className="repo-full-name">
+          <a className="toggle-list-visibility" href="#" onClick={this.toggleExpanded}>
+            {expandIcon}
+          </a>
           <span className="octicon octicon-repo"></span>
           {this.props.fullName}
           <span className="badge repo-commit-count">
             {commitCount} {commitCountLabel}
           </span>
         </span>
-        <ul className="commits-by-week-list">
+        <ul className="commits-by-week-list" style={listStyle}>
           {commitListItemsByWeek}
         </ul>
       </li>
