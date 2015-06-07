@@ -19,7 +19,7 @@ var IssuesList = React.createClass({
         issues.push(issue);
       }
     });
-    console.log('after filtering issues, have', issues.length);
+    console.log('after filtering', allIssues.length, 'issues, have', issues.length);
     this.setState({issues: issues});
   },
   fetchIssues: function() {
@@ -37,7 +37,6 @@ var IssuesList = React.createClass({
                 this.props.monthStr);
     Github.getAllRepoIssues(fullNames, sinceDate).
            then(function(issues) {
-             console.log('got', issues.length, 'issues');
              this.filterIssues(issues, year, month, sinceDate);
            }.bind(this), function() {
              console.error('failed to fetch issues');
@@ -59,6 +58,9 @@ var IssuesList = React.createClass({
     if (sameRepos && sameMonth) {
       return;
     }
+    this.fetchIssues();
+  },
+  componentWillMount: function() {
     this.fetchIssues();
   },
   render: function() {

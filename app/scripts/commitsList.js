@@ -55,6 +55,9 @@ var CommitsList = React.createClass({
     }
     this.fetchCommits();
   },
+  componentWillMount: function() {
+    this.fetchCommits();
+  },
   render: function() {
     return <CommitGroup repos={this.props.repos} commits={this.state.commits} monthStr={this.props.monthStr} />;
   }
