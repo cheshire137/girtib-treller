@@ -1,6 +1,5 @@
 'use strict';
 var Router = require('react-router'),
-    Config = require('./config.json'),
     LocalStorage = require('./localStorage'),
     React = require('react');
 var Index = React.createClass({
@@ -12,10 +11,7 @@ var Index = React.createClass({
     }
   },
   getInitialState: function() {
-    console.log('config', Config);
-    return {
-      authUrl: Config.apiUrl + '/auth/github'
-    };
+    return {authUrl: window.Config.apiUrl + '/auth/github'};
   },
   render: function() {
     return (

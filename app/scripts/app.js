@@ -1,10 +1,7 @@
 'use strict';
 var React = window.React = require('react'),
     mountNode = document.getElementById('app'),
-    Config = require('./config.json'),
     Router = require('react-router'),
-    LocalStorage = require('./localStorage'),
-    Github = require('./github'),
     Index = require('./index'),
     AuthFailure = require('./authFailure'),
     Auth = require('./auth'),
@@ -41,5 +38,9 @@ var routes = (
 );
 
 Router.run(routes, function(Handler) {
-  React.render(<Handler/>, mountNode);
+  $.get('scripts/config.json', function(Config) {
+    window.Config = Config;
+    console.log('loaded config', window.Config);
+    React.render(<Handler/>, mountNode);
+  });
 });

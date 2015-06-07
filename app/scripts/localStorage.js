@@ -1,6 +1,5 @@
 'use strict';
-var Config = require('./config.json'),
-    React = require('react');
+var React = require('react');
 var LocalStorage = (function() {
   return {
     getJSON: function() {
@@ -8,7 +7,7 @@ var LocalStorage = (function() {
         console.error('browser does not support local storage');
         return {};
       }
-      var appData = window.localStorage.getItem(Config.localStorageKey) || "{}";
+      var appData = window.localStorage.getItem(window.Config.localStorageKey) || "{}";
       return JSON.parse(appData);
     },
     get: function(key) {
@@ -18,12 +17,12 @@ var LocalStorage = (function() {
     set: function(key, value) {
       var appData = this.getJSON();
       appData[key] = value;
-      window.localStorage.setItem(Config.localStorageKey, JSON.stringify(appData));
+      window.localStorage.setItem(window.Config.localStorageKey, JSON.stringify(appData));
     },
     delete: function(key) {
       var appData = this.getJSON();
       delete appData[key];
-      window.localStorage.setItem(Config.localStorageKey, JSON.stringify(appData));
+      window.localStorage.setItem(window.Config.localStorageKey, JSON.stringify(appData));
     }
   };
 })();
