@@ -38,13 +38,22 @@ var routes = (
 );
 
 Router.run(routes, function(Handler) {
-  if (window.Config) {
+  var onConfigLoaded = function() {
+    if (window.Config.https && window.location.protocol !== 'https:') {
+      console.log('forcing https');
+      window.location.href = 'https:' + window.location.href.
+          substring(window.location.protocol.length);
+      return;
+    }
     React.render(<Handler/>, mountNode);
+  };
+  if (window.Config) {
+    onConfigLoaded();
   } else {
     $.get('scripts/config.json', function(Config) {
       window.Config = Config;
       console.log('loaded config', window.Config);
-      React.render(<Handler/>, mountNode);
+      onConfigLoaded();
     });
   }
 });

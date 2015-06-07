@@ -24,14 +24,20 @@ end
 # For Heroku where the API URL and front end URL are the same
 get '/scripts/config.json' do
   content_type 'application/json'
-  {localStorageKey: 'girtib-treller', apiUrl: ENV['FRONT_END_URL']}.to_json
+  {localStorageKey: 'girtib-treller', apiUrl: ENV['FRONT_END_URL'],
+   https: ENV['RACK_ENV'] == 'production'}.to_json
 end
 
 get '/auth/github' do
   content_type :json
   session[:state] = SecureRandom.hex
   scopes = 'repo'
-  redirect_url = "#{request.scheme}://#{request.host}"
+  if ENV['RACK_ENV'] == 'production'
+    scheme = 'https'
+  else
+    scheme = 'http'
+  end
+  redirect_url = "#{scheme}://#{request.host}"
   redirect_url += ":#{request.port}" unless request.port == 80
   redirect_url += '/auth/github/callback'
   github_url = 'https://github.com/login/oauth/authorize?client_id=' +
