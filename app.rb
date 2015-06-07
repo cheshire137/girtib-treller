@@ -7,6 +7,24 @@ require 'net/http'
 enable :sessions, :logging
 set :session_secret, ENV['SESSION_KEY']
 
+if ENV['RACK_ENV'] == 'production'
+  set :public_folder, 'dist'
+else
+  set :public_folder, 'app'
+end
+
+use Rack::Static, urls: ['/styles', '/scripts', '/images',
+                         '/bower_components'], root: settings.public_folder
+
+get '/' do
+  send_file File.join(settings.public_folder, 'index.html')
+end
+
+get '/config.json' do
+  content_type 'application/json'
+  {localStorageKey: 'girtib-treller', apiUrl: ENV['FRONT_END_URL']}.to_json
+end
+
 get '/auth/github' do
   content_type :json
   session[:state] = SecureRandom.hex
