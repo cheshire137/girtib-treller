@@ -1,6 +1,6 @@
 # girtib-treller
 
-![Screenshot](https://raw.githubusercontent.com/moneypenny/girtib-treller/master/screenshot1.png)
+![Screenshot](https://raw.githubusercontent.com/cheshire137/girtib-treller/master/screenshot1.png)
 
 ## How to Run Locally
 
@@ -41,4 +41,4 @@ Visit [localhost:3001](http://localhost:3001/) in your browser.
 
     ./deploy.sh
 
-![Ermagerd](https://raw.githubusercontent.com/moneypenny/girtib-treller/master/ermagerd.jpg)
+![Ermagerd](https://raw.githubusercontent.com/cheshire137/girtib-treller/master/ermagerd.jpg)
